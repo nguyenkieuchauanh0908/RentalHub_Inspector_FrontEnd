@@ -1,0 +1,68 @@
+<h2 class="font-extrabold">Bài viết đã duyệt</h2>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+  <!-- Position Column -->
+  <!-- <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef>STT</th>
+      <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+    </ng-container> -->
+
+  <!-- Title Column -->
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef>Tiêu đề</th>
+    <td mat-cell *matCellDef="let element" (click)="seePost(element)">
+      {{ element._title }}
+    </td>
+  </ng-container>
+
+  <!-- Desc Column -->
+  <ng-container matColumnDef="desc">
+    <th mat-header-cell *matHeaderCellDef>Mô tả</th>
+    <td mat-cell *matCellDef="let element" (click)="seePost(element)">
+      {{ element._desc }}
+    </td>
+  </ng-container>
+
+  <!-- Address Column -->
+  <ng-container matColumnDef="address">
+    <th mat-header-cell *matHeaderCellDef>Địa chỉ</th>
+    <td mat-cell *matCellDef="let element" (click)="seePost(element)">
+      {{ element.address }}
+    </td>
+  </ng-container>
+
+  <!-- Author Column -->
+  <ng-container matColumnDef="author">
+    <th mat-header-cell *matHeaderCellDef>Tác giả</th>
+    <td mat-cell *matCellDef="let element" (click)="seePost(element)">
+      {{ element.authorFName }} {{ element.authorLName }}
+    </td>
+  </ng-container>
+
+  <!-- Action Column -->
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef>Chi tiết</th>
+    <td
+      mat-cell
+      *matCellDef="let element"
+      (click)="seePost(element)"
+      class="cursor-pointer"
+    >
+      Xem bài viết
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr
+    mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    class="cursor-pointer"
+  ></tr>
+</table>
+<app-pagination
+  [totalPages]="totalPages"
+  (toPrevPage)="changeCurrentPage($event)"
+  (toNextPage)="changeCurrentPage($event)"
+></app-pagination>

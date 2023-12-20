@@ -1,0 +1,83 @@
+<mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side">
+    <div (click)="drawer.toggle()" *ngIf="drawer.opened">
+      <mat-icon>menu</mat-icon>
+    </div>
+    <div class="flex flex-col me-2 mb-2">
+      <div
+        (click)="updateAvatar()"
+        class="flex align-middle justify-center cursor-pointer"
+      >
+        <img
+          class="w-16 h-16 rounded-full"
+          src="{{ myProfile?._avatar }}"
+          alt="Rounded avatar"
+        />
+      </div>
+      <div class="text-center">
+        <p class="text-white">
+          {{ myProfile?._fname }} {{ myProfile?._lname }}
+        </p>
+      </div>
+    </div>
+    <div class="text-white text-md w-36">
+      <button
+        (click)="toMyAccount()"
+        type="button"
+        class="block text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-36"
+      >
+        Hồ sơ cá nhân
+      </button>
+      <button
+        (click)="toMyLoginDetail()"
+        type="button"
+        class="block text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-36"
+      >
+        Thông tin đăng nhập
+      </button>
+      <button
+        (click)="toCheckPost()"
+        type="button"
+        class="block text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-36"
+      >
+        Chờ duyệt
+      </button>
+      <button
+        (click)="toCheckedPost()"
+        type="button"
+        class="block text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-36"
+      >
+        Được duyệt
+      </button>
+      <button
+        (click)="deniedPost()"
+        type="button"
+        class="block text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-36"
+      >
+        Không được duyệt
+      </button>
+      <button
+        (click)="logout()"
+        type="button"
+        class="block text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-36"
+      >
+        Đăng xuất
+      </button>
+    </div>
+  </mat-drawer>
+
+  <div class="example-sidenav-content">
+    <div class="flex">
+      <div
+        (click)="drawer.toggle()"
+        *ngIf="!drawer.opened"
+        class="menu-icon-wrapper pt-2 px-1 bg-primary-500 h-1"
+      >
+        <mat-icon>menu</mat-icon>
+      </div>
+      <div class="flex-1 px-6 py-4 mt-4">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</mat-drawer-container>
