@@ -41,6 +41,7 @@ export class LoginDetailUpdateDialogComponent {
                 'success',
                 'Cập nhật thông tin đăng nhập thành công!Vui lòng đăng nhập lại!'
               );
+              this.dialog.closeAll();
               this.authService.logout(this.accountService.getCurrentUserId());
             }
           },

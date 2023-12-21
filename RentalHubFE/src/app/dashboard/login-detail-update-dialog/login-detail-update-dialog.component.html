@@ -28,7 +28,7 @@
         <label
           for="base-input"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Mật khẩu</label
+          >Mật khẩu mới</label
         >
         <input
           type="password"
@@ -54,7 +54,7 @@
         <label
           for="base-input"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Xác nhận lại mật khẩu</label
+          >Xác thực mật khẩu cũ</label
         >
         <input
           type="password"
@@ -71,7 +71,7 @@
           role="alert"
         >
           <div *ngIf="repw.errors?.['required']">
-            Vui lòng nhập lại mật khẩu để xác nhận.
+            Vui lòng nhập mật khẩu cũ để xác thực.
           </div>
         </div>
       </div>
@@ -87,7 +87,6 @@
     style="color: white; background-color: #1a56db"
     mat-button
     type="submit"
-    mat-dialog-close
   >
     Lưu thay đổi
   </button>
