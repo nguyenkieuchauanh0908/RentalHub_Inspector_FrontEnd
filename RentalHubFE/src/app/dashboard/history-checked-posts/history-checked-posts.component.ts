@@ -16,7 +16,7 @@ import { PaginationService } from 'src/app/shared/pagination/pagination.service'
   styleUrls: ['./history-checked-posts.component.scss'],
 })
 export class HistoryCheckedPostsComponent {
-  displayedColumns: string[] = ['title', 'desc', 'address', 'author', 'action'];
+  displayedColumns: string[] = ['title', 'desc', 'author'];
   dataSource!: PostItem[];
   myProfile!: User | null;
   currentUid!: string | null;

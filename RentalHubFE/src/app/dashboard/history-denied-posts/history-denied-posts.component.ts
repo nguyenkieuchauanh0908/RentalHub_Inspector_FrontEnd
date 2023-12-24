@@ -16,7 +16,7 @@ import { PaginationService } from 'src/app/shared/pagination/pagination.service'
   styleUrls: ['./history-denied-posts.component.scss'],
 })
 export class HistoryDeniedPostsComponent {
-  displayedColumns: string[] = ['title', 'desc', 'address', 'author', 'action'];
+  displayedColumns: string[] = ['title', 'desc', 'author'];
   dataSource!: PostItem[];
   myProfile!: User | null;
   currentUid!: string | null;
