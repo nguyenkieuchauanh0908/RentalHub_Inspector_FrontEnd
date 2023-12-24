@@ -9,7 +9,7 @@ import { NotifierService } from 'angular-notifier';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'Rental Hub';
+  title = 'Inspector';
   isUser = false;
   isHost = false;
 
