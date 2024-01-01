@@ -16,6 +16,7 @@ import { PaginationService } from 'src/app/shared/pagination/pagination.service'
   styleUrls: ['./post-sensor.component.scss'],
 })
 export class PostSensorComponent implements OnInit {
+  isLoading = false;
   displayedColumns: string[] = ['title', 'desc', 'author'];
   dataSource!: PostItem[];
   myProfile!: User | null;
@@ -32,7 +33,6 @@ export class PostSensorComponent implements OnInit {
     private accountService: AccountService,
     private postService: PostService,
     public dialog: MatDialog,
-    private notifierService: NotifierService,
     private paginationService: PaginationService
   ) {
     if (this.currentUid) {
@@ -41,15 +41,22 @@ export class PostSensorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.paginationService.currentPage = 1;
-    this.postService.getPostInspector(0, 1, 5).subscribe((res) => {
-      this.dataSource = res.data;
-      console.log(
-        '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
-        this.dataSource
-      );
-      this.totalPages = res.pagination.total;
-    });
+    this.postService.getPostInspector(0, 1, 5).subscribe(
+      (res) => {
+        this.dataSource = res.data;
+        console.log(
+          '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
+          this.dataSource
+        );
+        this.totalPages = res.pagination.total;
+        this.isLoading = false;
+      },
+      (errMsg) => {
+        this.isLoading = false;
+      }
+    );
   }
 
   seePost(post: any) {

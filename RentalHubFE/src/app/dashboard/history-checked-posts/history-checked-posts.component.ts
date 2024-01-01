@@ -16,6 +16,7 @@ import { PaginationService } from 'src/app/shared/pagination/pagination.service'
   styleUrls: ['./history-checked-posts.component.scss'],
 })
 export class HistoryCheckedPostsComponent {
+  isLoading = false;
   displayedColumns: string[] = ['title', 'desc', 'author'];
   dataSource!: PostItem[];
   myProfile!: User | null;
@@ -41,17 +42,23 @@ export class HistoryCheckedPostsComponent {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.paginationService.currentPage = 1;
-
     this.currentUid = this.accountService.getCurrentUserId();
-    this.postService.getPostInspector(1, 1, 5).subscribe((res) => {
-      this.dataSource = res.data;
-      console.log(
-        '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
-        this.dataSource
-      );
-      this.totalPages = res.pagination.total;
-    });
+    this.postService.getPostInspector(1, 1, 5).subscribe(
+      (res) => {
+        this.isLoading = false;
+        this.dataSource = res.data;
+        console.log(
+          '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
+          this.dataSource
+        );
+        this.totalPages = res.pagination.total;
+      },
+      (errMsg) => {
+        this.isLoading = false;
+      }
+    );
   }
 
   seePost(post: any) {

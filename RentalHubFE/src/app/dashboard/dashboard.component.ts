@@ -20,7 +20,6 @@ export class DashboardComponent implements OnInit {
   myProfile: User | null | undefined;
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
     private authService: AuthService,
     private accountService: AccountService,
     private notifierService: NotifierService,

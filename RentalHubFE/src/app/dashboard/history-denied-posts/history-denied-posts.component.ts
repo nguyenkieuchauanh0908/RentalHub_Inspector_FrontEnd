@@ -16,6 +16,7 @@ import { PaginationService } from 'src/app/shared/pagination/pagination.service'
   styleUrls: ['./history-denied-posts.component.scss'],
 })
 export class HistoryDeniedPostsComponent {
+  isLoading = false;
   displayedColumns: string[] = ['title', 'desc', 'author'];
   dataSource!: PostItem[];
   myProfile!: User | null;
@@ -41,14 +42,21 @@ export class HistoryDeniedPostsComponent {
   }
 
   ngOnInit(): void {
-    this.postService.getPostInspector(3, 1, 5).subscribe((res) => {
-      this.dataSource = res.data;
-      console.log(
-        '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
-        this.dataSource
-      );
-      this.totalPages = res.pagination.total;
-    });
+    this.isLoading = true;
+    this.postService.getPostInspector(3, 1, 5).subscribe(
+      (res) => {
+        this.dataSource = res.data;
+        console.log(
+          '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
+          this.dataSource
+        );
+        this.totalPages = res.pagination.total;
+        this.isLoading = false;
+      },
+      (errMsg) => {
+        this.isLoading = false;
+      }
+    );
   }
 
   seePost(post: any) {

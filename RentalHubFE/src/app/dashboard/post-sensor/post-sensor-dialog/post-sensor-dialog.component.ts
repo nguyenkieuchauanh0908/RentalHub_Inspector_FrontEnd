@@ -16,6 +16,7 @@ import { Tags } from 'src/app/shared/tags/tag.model';
 export class PostSensorDialogComponent {
   private getProfileSub!: Subscription;
   private getPostHistorySub!: Subscription;
+  isLoading = false;
   profile!: User | null;
   currentUid!: string | null;
   myProfile!: User | null;
@@ -69,13 +70,20 @@ export class PostSensorDialogComponent {
       data: 'Xác nhận từ chối duyệt?',
     });
     const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
-      this.postService.sensorPost(this.data._id, 3).subscribe((res) => {
-        if (res.data) {
-          this.denySensorResult.emit(this.data._id);
-          this.notifierService.hideAll();
-          this.notifierService.notify('success', 'Từ chối duyệt thành công!');
+      this.isLoading = true;
+      this.postService.sensorPost(this.data._id, 3).subscribe(
+        (res) => {
+          if (res.data) {
+            this.isLoading = false;
+            this.denySensorResult.emit(this.data._id);
+            this.notifierService.hideAll();
+            this.notifierService.notify('success', 'Từ chối duyệt thành công!');
+          }
+        },
+        (errMsg) => {
+          this.isLoading = false;
         }
-      });
+      );
     });
     dialogRef.afterClosed().subscribe(() => {
       sub.unsubscribe();
@@ -88,13 +96,23 @@ export class PostSensorDialogComponent {
       data: 'Xác nhận duyệt?',
     });
     const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
-      this.postService.sensorPost(this.data._id, 1).subscribe((res) => {
-        if (res.data) {
-          this.sensorResult.emit(this.data._id);
-          this.notifierService.hideAll();
-          this.notifierService.notify('success', 'Duyệt bài viết thành công!');
+      this.isLoading = true;
+      this.postService.sensorPost(this.data._id, 1).subscribe(
+        (res) => {
+          if (res.data) {
+            this.isLoading = false;
+            this.sensorResult.emit(this.data._id);
+            this.notifierService.hideAll();
+            this.notifierService.notify(
+              'success',
+              'Duyệt bài viết thành công!'
+            );
+          }
+        },
+        (errMsg) => {
+          this.isLoading = false;
         }
-      });
+      );
     });
     dialogRef.afterClosed().subscribe(() => {
       sub.unsubscribe();

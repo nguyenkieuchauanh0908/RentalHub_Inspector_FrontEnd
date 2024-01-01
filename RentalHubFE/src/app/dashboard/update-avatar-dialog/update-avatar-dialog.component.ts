@@ -63,12 +63,14 @@ export class UpdateAvatarDialogComponent {
         data: 'Xác nhận cập nhật ảnh đại diện?',
       });
       const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
+        this.isLoading = true;
         for (let i = 0; i < this.selectedFiles!.length; i++) {
           console.log(typeof this.selectedFiles![i]);
           this.accountService.updateAvatar(this.selectedFiles![i]).subscribe(
             (res) => {
               if (res.data) {
                 console.log(res.data);
+                this.isLoading = false;
                 this.notifierService.notify(
                   'success',
                   'Cập nhật ảnh đại diện thành công!'

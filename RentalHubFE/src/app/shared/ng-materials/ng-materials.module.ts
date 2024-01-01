@@ -14,7 +14,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgImageSliderModule } from 'ng-image-slider';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @NgModule({
   declarations: [],
   imports: [
@@ -33,6 +33,7 @@ import { MatTableModule } from '@angular/material/table';
     NgImageSliderModule,
     MatSidenavModule,
     MatTableModule,
+    MatProgressSpinnerModule,
   ],
   exports: [
     MatDividerModule,
@@ -50,6 +51,7 @@ import { MatTableModule } from '@angular/material/table';
     NgImageSliderModule,
     MatSidenavModule,
     MatTableModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class NgMaterialsModule {}
