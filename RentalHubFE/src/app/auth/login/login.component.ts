@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { resDataDTO } from 'src/app/shared/resDataDTO';
@@ -11,7 +11,9 @@ import { NotifierService } from 'angular-notifier';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  password: string = 'password';
+  isPwShown: boolean = false;
   isLoading = false;
   error: string = '';
 
@@ -20,6 +22,10 @@ export class LoginComponent {
     private router: Router,
     private notifierService: NotifierService
   ) {}
+
+  ngOnInit(): void {
+    this.password = 'password';
+  }
 
   onSubmit(form: NgForm) {
     let loginObs: Observable<resDataDTO>;
@@ -59,5 +65,15 @@ export class LoginComponent {
       '🚀 ~ file: login.component.ts:28 ~ LoginComponent ~ onSubmit ~ loginObs:',
       loginObs
     );
+  }
+
+  onEyesSeePwClick() {
+    if (this.password === 'password') {
+      this.password = 'text';
+      this.isPwShown = true;
+    } else {
+      this.password = 'password';
+      this.isPwShown = false;
+    }
   }
 }
