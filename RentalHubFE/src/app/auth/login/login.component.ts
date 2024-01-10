@@ -12,6 +12,7 @@ import { NotifierService } from 'angular-notifier';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  loginObs!: Observable<resDataDTO>;
   password: string = 'password';
   isPwShown: boolean = false;
   isLoading = false;
@@ -28,31 +29,31 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    let loginObs: Observable<resDataDTO>;
     if (!form.valid) {
       return;
     }
     const email = form.value.email;
     const pw = form.value.password;
 
-    loginObs = this.authService.login(email, pw);
+    this.loginObs = this.authService.login(email, pw);
     console.log(
-      '🚀 ~ file: login.component.ts:28 ~ LoginComponent ~ onSubmit ~ loginObs:',
-      loginObs
+      '🚀 ~ file: login.component.ts:28 ~ LoginComponent ~ onSubmit ~ this.loginObs:',
+      this.loginObs
     );
 
     this.isLoading = true;
     this.notifierService.hideAll();
-    loginObs.subscribe(
+    this.loginObs.subscribe(
       (res) => {
         console.log(
           '🚀 ~ file: login.component.ts:32 ~ LoginComponent ~ onSubmit ~ res:',
           res
         );
-        this.isLoading = false;
-        this.router.navigate(['/dashboard/post-sensor']);
-        this.notifierService.hideAll();
         this.notifierService.notify('success', 'Đăng nhập thành công!');
+        this.isLoading = false;
+        setTimeout(() => {
+          this.router.navigate(['']);
+        }, 1000);
       },
       (errorMsg) => {
         this.isLoading = false;
@@ -60,10 +61,6 @@ export class LoginComponent implements OnInit {
         console.log(this.error);
         this.notifierService.notify('error', errorMsg);
       }
-    );
-    console.log(
-      '🚀 ~ file: login.component.ts:28 ~ LoginComponent ~ onSubmit ~ loginObs:',
-      loginObs
     );
   }
 

@@ -10,6 +10,9 @@ import { PostSensorDialogComponent } from './post-sensor/post-sensor-dialog/post
 import { AccountEditDialogComponent } from './account-edit-dialog/account-edit-dialog.component';
 import { UpdateAvatarDialogComponent } from './update-avatar-dialog/update-avatar-dialog.component';
 import { LoginDetailUpdateDialogComponent } from './login-detail-update-dialog/login-detail-update-dialog.component';
+import { Observable } from 'rxjs';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { resDataDTO } from '../shared/resDataDTO';
 
 @Component({
   selector: 'app-dashboard',
@@ -62,11 +65,19 @@ export class DashboardComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout(this.myProfile?.RFToken).subscribe((res) => {
-      if (res.data) {
-        this.notifierService.hideAll();
-        this.notifierService.notify('success', 'Đăng  xuất thành công!');
-      }
+    console.log('On logging out...');
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: 'Bạn có chắc muốn đăng xuất?',
+    });
+    const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
+      let logoutObs: Observable<resDataDTO>;
+      logoutObs = this.authService.logout(this.myProfile?.RFToken);
+      logoutObs.subscribe();
+      this.router.navigate(['/auth/login']);
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      sub.unsubscribe();
     });
   }
 
