@@ -11,9 +11,10 @@ import { HistoryDeniedPostsComponent } from './history-denied-posts/history-deni
 import { AccountEditDialogComponent } from './account-edit-dialog/account-edit-dialog.component';
 import { UpdateAvatarDialogComponent } from './update-avatar-dialog/update-avatar-dialog.component';
 import { LoginDetailUpdateDialogComponent } from './login-detail-update-dialog/login-detail-update-dialog.component';
+import { ReportedPostsComponent } from './reported-posts/reported-posts.component';
 
 @NgModule({
-  declarations: [DashboardComponent, PostSensorComponent, PostSensorDialogComponent, HistoryCheckedPostsComponent, HistoryDeniedPostsComponent, AccountEditDialogComponent, UpdateAvatarDialogComponent, LoginDetailUpdateDialogComponent],
+  declarations: [DashboardComponent, PostSensorComponent, PostSensorDialogComponent, HistoryCheckedPostsComponent, HistoryDeniedPostsComponent, AccountEditDialogComponent, UpdateAvatarDialogComponent, LoginDetailUpdateDialogComponent, ReportedPostsComponent],
   imports: [CommonModule, FormsModule, DashboardRoutingModule, SharedModule],
   providers: [],
 })

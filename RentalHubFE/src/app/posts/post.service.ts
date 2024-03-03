@@ -189,11 +189,41 @@ export class PostService {
       .pipe(catchError(handleError));
   }
 
+  getReportPostList(page: number, limit: number) {
+    let queryParams = new HttpParams()
+      .append('page', page)
+      .append('limit', limit);
+    return this.http
+      .get<resDataDTO>(environment.baseUrl + 'posts/get-report-post', {
+        params: queryParams,
+      })
+      .pipe(catchError(handleError));
+  }
+
+  getReportPostById(pId: any) {
+    console.log('🚀 ~ PostService ~ getReportPostById ~ pId:', pId);
+    let queryParams = new HttpParams().append('postId', pId);
+    return this.http
+      .get<resDataDTO>(environment.baseUrl + 'posts/get-report-post-id', {
+        params: queryParams,
+      })
+      .pipe(catchError(handleError));
+  }
+
   sensorPost(postId: string, status: number) {
     return this.http
       .patch<resDataDTO>(environment.baseUrl + 'posts/sensor-post/' + postId, {
         _status: status,
       })
+      .pipe(catchError(handleError));
+  }
+
+  removePost(reportId: string) {
+    return this.http
+      .patch<resDataDTO>(
+        environment.baseUrl + 'posts/sensor-post-reported/' + reportId,
+        {}
+      )
       .pipe(catchError(handleError));
   }
 

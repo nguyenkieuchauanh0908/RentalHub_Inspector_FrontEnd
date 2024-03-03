@@ -52,7 +52,7 @@ export class PostSensorDialogComponent {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log(this.data);
+    console.log('🚀 ~ PostSensorDialogComponent ~ data:', this.data);
   }
 
   ngOnInit(): void {
@@ -107,6 +107,32 @@ export class PostSensorDialogComponent {
               'success',
               'Duyệt bài viết thành công!'
             );
+          }
+        },
+        (errMsg) => {
+          this.isLoading = false;
+        }
+      );
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      sub.unsubscribe();
+    });
+  }
+
+  removePost() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: 'Xác nhận khóa bài viết?',
+    });
+    const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
+      this.isLoading = true;
+      this.postService.removePost(this.data._id).subscribe(
+        (res) => {
+          if (res.data) {
+            this.isLoading = false;
+            this.sensorResult.emit(this.data._id);
+            this.notifierService.hideAll();
+            this.notifierService.notify('success', 'Khóa bài viết thành công!');
           }
         },
         (errMsg) => {

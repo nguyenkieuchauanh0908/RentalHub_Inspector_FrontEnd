@@ -50,6 +50,11 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['dashboard/history-denied-posts']);
   }
 
+  reportedPost() {
+    console.log('reportedPost...');
+    this.router.navigate(['dashboard/reported-posts']);
+  }
+
   toMyAccount() {
     const dialogRef = this.dialog.open(AccountEditDialogComponent, {
       width: '400px',

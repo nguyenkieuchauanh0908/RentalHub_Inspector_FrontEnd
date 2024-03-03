@@ -18,7 +18,7 @@
             type="text"
             id="title-input"
             name="title"
-            [ngModel]="data._title"
+            [ngModel]="this.data._title"
             ngModel
             required
             disabled
@@ -33,7 +33,7 @@
             >Mô tả ngắn</label
           >
           <textarea
-            [ngModel]="data._desc"
+            [ngModel]="this.data._desc"
             type="text"
             rows="4"
             id="desc-input"
@@ -53,7 +53,7 @@
             >Nội dung chính</label
           >
           <textarea
-            [ngModel]="data._content"
+            [ngModel]="this.data._content"
             rows="8"
             type="text"
             id="content-input"
@@ -74,7 +74,7 @@
             >Đường</label
           >
           <input
-            [ngModel]="data.roomStreet"
+            [ngModel]="this.data.roomStreet"
             type="text"
             id="street-input"
             name="street"
@@ -93,7 +93,7 @@
             >Quận</label
           >
           <input
-            [ngModel]="data.roomDistrict"
+            [ngModel]="this.data.roomDistrict"
             type="text"
             id="district-input"
             name="district"
@@ -129,7 +129,7 @@
             >Diện tích (m2)</label
           >
           <input
-            [ngModel]="data.roomArea"
+            [ngModel]="this.data.roomArea"
             type="text"
             id="area-input"
             name="area"
@@ -148,7 +148,7 @@
             >Gía thuê nhà theo tháng (VNĐ)</label
           >
           <input
-            [ngModel]="data.roomPrice"
+            [ngModel]="this.data.roomPrice"
             type="text"
             id="renting_price-input"
             name="renting_price"
@@ -166,7 +166,7 @@
             >Gía điện (ký)</label
           >
           <input
-            [ngModel]="data.roomElectricPrice"
+            [ngModel]="this.data.roomElectricPrice"
             type="text"
             id="electric_input"
             name="electric"
@@ -184,7 +184,7 @@
             >Gía nước (khối)</label
           >
           <input
-            [ngModel]="data.roomWaterPrice"
+            [ngModel]="this.data.roomWaterPrice"
             type="text"
             id="water_price_input"
             name="water_price"
@@ -203,7 +203,7 @@
             >Dịch vụ</label
           >
           <input
-            [ngModel]="data.roomServices"
+            [ngModel]="this.data.roomServices"
             type="text"
             id="services_input"
             name="services"
@@ -222,7 +222,7 @@
             >Tiện ích</label
           >
           <input
-            [ngModel]="data.roomUtilities"
+            [ngModel]="this.data.roomUtilities"
             type="text"
             id="utilities_input"
             name="utilities"
@@ -285,7 +285,7 @@
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Hủy</button>
     <button
-      *ngIf="data._status !== 3"
+      *ngIf="this.data._status !== 3 && this.data._status !== 4"
       (click)="denyPost()"
       mat-button
       class="bg-red-700 hover:bg-red-800"
@@ -294,7 +294,7 @@
       Hủy duyệt
     </button>
     <button
-      *ngIf="data._status !== 1"
+      *ngIf="this.data._status !== 1 && this.data._status !== 4"
       (click)="sensor()"
       class="bg-blue-700 hover:bg-blue-800"
       style="color: white; background-color: #1a56db"
@@ -302,6 +302,15 @@
       type="button"
     >
       Duyệt
+    </button>
+    <button
+      *ngIf="this.data._status === 4"
+      (click)="removePost()"
+      mat-button
+      class="bg-red-700 hover:bg-red-800"
+      style="color: white; background-color: rgba(255, 0, 0, 0.8)"
+    >
+      Gỡ bài viết
     </button>
   </mat-dialog-actions>
 </div>

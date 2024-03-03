@@ -5,6 +5,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { DashboardComponent } from './dashboard.component';
 import { HistoryCheckedPostsComponent } from './history-checked-posts/history-checked-posts.component';
 import { HistoryDeniedPostsComponent } from './history-denied-posts/history-denied-posts.component';
+import { ReportedPostsComponent } from './reported-posts/reported-posts.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,16 @@ const routes: Routes = [
       {
         path: 'history-denied-posts',
         component: HistoryDeniedPostsComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'history-denied-posts',
+        component: HistoryDeniedPostsComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'reported-posts',
+        component: ReportedPostsComponent,
         canActivate: [AuthGuard],
       },
     ],
