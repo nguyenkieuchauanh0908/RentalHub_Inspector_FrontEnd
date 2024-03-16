@@ -14,8 +14,10 @@ import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-di
 export class LoginDetailUpdateDialogComponent implements OnInit {
   password: string = 'password';
   confirmPassword: string = 'password';
+  oldPassword: string = 'password';
   isPwShown: boolean = false;
   isConfirmPwShown: boolean = false;
+  isOldPwShown: boolean = false;
   isLoading = false;
   error: string = '';
 
@@ -43,7 +45,7 @@ export class LoginDetailUpdateDialogComponent implements OnInit {
     const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
       this.isLoading = true;
       this.accountService
-        .updateEmailPassword(form.email, form.pw, form.repw)
+        .updateEmailPasswordInspector(form.oldpw, form.newpw, form.repw)
         .subscribe(
           (res) => {
             if (res.data) {
@@ -86,6 +88,16 @@ export class LoginDetailUpdateDialogComponent implements OnInit {
     } else {
       this.confirmPassword = 'password';
       this.isConfirmPwShown = false;
+    }
+  }
+
+  onEyesSeeOldPwClick() {
+    if (this.oldPassword === 'password') {
+      this.oldPassword = 'text';
+      this.isOldPwShown = true;
+    } else {
+      this.oldPassword = 'password';
+      this.isOldPwShown = false;
     }
   }
 }

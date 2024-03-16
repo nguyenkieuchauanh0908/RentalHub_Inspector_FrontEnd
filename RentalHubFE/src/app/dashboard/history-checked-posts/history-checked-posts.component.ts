@@ -17,7 +17,13 @@ import { PaginationService } from 'src/app/shared/pagination/pagination.service'
 })
 export class HistoryCheckedPostsComponent {
   isLoading = false;
-  displayedColumns: string[] = ['title', 'desc', 'author'];
+  displayedColumns: string[] = [
+    'image',
+    'title',
+    'desc',
+    'author',
+    'lastUpdate',
+  ];
   dataSource!: PostItem[];
   myProfile!: User | null;
   currentUid!: string | null;

@@ -9,8 +9,7 @@
 }
 
 .example-sidenav {
-  background-color: #3b82f6;
-  padding: 4px;
+  background-color: #2563eb;
 }
 
 .menu-icon-wrapper {
@@ -19,4 +18,11 @@
 
 :host ::ng-deep .mat-icon {
   color: white !important;
+}
+
+:host ::ng-deep .mat-drawer-side {
+  box-shadow: none;
+  border-right-color: #2563eb;
+  border-right-width: 0px;
+  border-right-style: none !important;
 }

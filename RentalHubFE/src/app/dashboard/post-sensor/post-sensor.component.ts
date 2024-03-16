@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { NotifierService } from 'angular-notifier';
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/accounts/accounts.service';
-import { PostEditDialogComponent } from 'src/app/accounts/posting-history/post-edit-dialog/post-edit-dialog.component';
 import { User } from 'src/app/auth/user.model';
 import { PostService } from 'src/app/posts/post.service';
 import { PostItem } from 'src/app/posts/posts-list/post-item/post-item.model';
@@ -17,7 +15,13 @@ import { PaginationService } from 'src/app/shared/pagination/pagination.service'
 })
 export class PostSensorComponent implements OnInit {
   isLoading = false;
-  displayedColumns: string[] = ['title', 'desc', 'author'];
+  displayedColumns: string[] = [
+    'image',
+    'title',
+    'desc',
+    'author',
+    'lastUpdate',
+  ];
   dataSource!: PostItem[];
   myProfile!: User | null;
   currentUid!: string | null;
@@ -48,7 +52,7 @@ export class PostSensorComponent implements OnInit {
         this.dataSource = res.data;
         console.log(
           '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
-          this.dataSource
+          this.dataSource[0]._images[0]
         );
         this.totalPages = res.pagination.total;
         this.isLoading = false;

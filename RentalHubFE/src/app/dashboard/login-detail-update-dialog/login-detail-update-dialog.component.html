@@ -8,42 +8,84 @@
     <div class="p-4 md:p-5">
       <form #editProfileForm="ngForm" class="space-y-4">
         <!-- Email  -->
-        <div class="mb-6">
+        <!-- <div class="mb-6">
           <label
             for="base-input"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >Email</label
           >
           <input
-            [ngModel]="data"
+            [ngModel]="data._email"
             rows="8"
             type="email"
             id="email-input"
             name="email"
             ngModel
-            required
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            disabled
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 cursor-not-allowed"
             #email="ngModel"
           />
-        </div>
+        </div> -->
 
-        <!-- Password -->
+        <!--Old Password -->
         <div>
           <label
             for="password"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Mật khẩu</label
+            >Mật khẩu cũ</label
           >
           <div class="relative">
             <input
-              [type]="password"
-              name="pw"
-              id="password"
+              [type]="oldPassword"
+              name="oldpw"
+              id="oldpassword"
               placeholder="••••••••"
               class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               required
               ngModel
               #pw="ngModel"
+            />
+            <button
+              class="absolute top-3 right-4"
+              (click)="onEyesSeeOldPwClick()"
+              type="button"
+            >
+              <i class="fa fa-eye" aria-hidden="true" *ngIf="!isOldPwShown"></i>
+              <i
+                class="fa fa-eye-slash"
+                aria-hidden="true"
+                *ngIf="isOldPwShown"
+              ></i>
+            </button>
+          </div>
+          <div
+            *ngIf="pw.invalid && (pw.dirty || pw.touched)"
+            class="p-4 mb-4 mt-2 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+            role="alert"
+          >
+            <div *ngIf="pw.errors?.['required']">
+              Mật khẩu không được bỏ trống!
+            </div>
+          </div>
+        </div>
+
+        <!--new password  -->
+        <div>
+          <label
+            for="pw_confirm"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Nhập mật khẩu mới</label
+          >
+          <div class="relative">
+            <input
+              [type]="password"
+              name="newpw"
+              id="newpassword"
+              placeholder="••••••••"
+              class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required
+              ngModel
+              #confirmPw="ngModel"
             />
             <button
               class="absolute top-3 right-4"
@@ -59,12 +101,12 @@
             </button>
           </div>
           <div
-            *ngIf="pw.invalid && (pw.dirty || pw.touched)"
+            *ngIf="confirmPw.invalid && (confirmPw.dirty || confirmPw.touched)"
             class="p-4 mb-4 mt-2 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
             role="alert"
           >
-            <div *ngIf="pw.errors?.['required']">
-              Mật khẩu không được bỏ trống!
+            <div *ngIf="confirmPw.errors?.['required']">
+              Vui lòng nhập mật khẩu mới!
             </div>
           </div>
         </div>
@@ -74,7 +116,7 @@
           <label
             for="pw_confirm"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Mật khẩu cũ</label
+            >Nhập lại mật khẩu</label
           >
           <div class="relative">
             <input

@@ -14,6 +14,9 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { AuthGuard } from './auth/auth.guard';
 import { NotifierModule } from 'angular-notifier';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { MAT_MENU_SCROLL_STRATEGY } from '@angular/material/menu';
+import { MAT_TOOLTIP_SCROLL_STRATEGY } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,6 +34,18 @@ import { DashboardComponent } from './dashboard/dashboard.component';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
       multi: true,
+    },
+    {
+      provide: MAT_TOOLTIP_SCROLL_STRATEGY,
+      useFactory: (scrollStrategyOptions: ScrollStrategyOptions) =>
+        scrollStrategyOptions.noop,
+      deps: [ScrollStrategyOptions],
+    },
+    {
+      provide: MAT_MENU_SCROLL_STRATEGY,
+      useFactory: (scrollStrategyOptions: ScrollStrategyOptions) =>
+        scrollStrategyOptions.noop,
+      deps: [ScrollStrategyOptions],
     },
     AuthGuard,
   ],

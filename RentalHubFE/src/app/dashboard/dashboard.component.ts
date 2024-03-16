@@ -6,9 +6,7 @@ import { AccountService } from '../accounts/accounts.service';
 import { User } from '../auth/user.model';
 import { NotifierService } from 'angular-notifier';
 import { MatDialog } from '@angular/material/dialog';
-import { PostSensorDialogComponent } from './post-sensor/post-sensor-dialog/post-sensor-dialog.component';
 import { AccountEditDialogComponent } from './account-edit-dialog/account-edit-dialog.component';
-import { UpdateAvatarDialogComponent } from './update-avatar-dialog/update-avatar-dialog.component';
 import { LoginDetailUpdateDialogComponent } from './login-detail-update-dialog/login-detail-update-dialog.component';
 import { Observable } from 'rxjs';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
@@ -83,13 +81,6 @@ export class DashboardComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(() => {
       sub.unsubscribe();
-    });
-  }
-
-  updateAvatar() {
-    const dialogRef = this.dialog.open(UpdateAvatarDialogComponent, {
-      width: '400px',
-      data: this.myProfile?._avatar,
     });
   }
 }

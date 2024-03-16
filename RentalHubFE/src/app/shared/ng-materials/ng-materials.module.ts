@@ -15,6 +15,10 @@ import { NgImageSliderModule } from 'ng-image-slider';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 @NgModule({
   declarations: [],
   imports: [
@@ -34,6 +38,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSidenavModule,
     MatTableModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatTooltipModule,
+    MatBadgeModule,
+    MatMenuModule,
   ],
   exports: [
     MatDividerModule,
@@ -52,6 +60,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSidenavModule,
     MatTableModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatTooltipModule,
+    MatBadgeModule,
+    MatMenuModule,
   ],
 })
 export class NgMaterialsModule {}

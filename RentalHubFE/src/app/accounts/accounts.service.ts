@@ -95,9 +95,24 @@ export class AccountService {
       .pipe(catchError(handleError));
   }
 
+  updateEmailPasswordInspector(oldpwd: string, newpwd: string, repwd: string) {
+    return this.http
+      .patch<resDataDTO>(environment.baseUrl + 'inspector/update-password', {
+        _oldpw: oldpwd,
+        _pw: newpwd,
+        _pwconfirm: repwd,
+      })
+      .pipe(
+        catchError(handleError),
+        tap((res) => {
+          if (res.data) {
+            console.log('Update password successfully!');
+          }
+        })
+      );
+  }
+
   verifyAccount(phone: string) {
-    console.log('your phone is: ', phone);
-    console.log('sending otp to mail ...');
     return this.http
       .post<resDataDTO>(environment.baseUrl + 'users/accounts/active-host', {
         _phone: phone,

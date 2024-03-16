@@ -16,7 +16,13 @@ import { PostSensorDialogComponent } from '../post-sensor/post-sensor-dialog/pos
 })
 export class ReportedPostsComponent implements OnInit {
   isLoading = false;
-  displayedColumns: string[] = ['title', 'desc', 'author'];
+  displayedColumns: string[] = [
+    'image',
+    'title',
+    'desc',
+    'author',
+    'lastUpdate',
+  ];
   dataSource!: PostItem[];
   myProfile!: User | null;
   currentUid!: string | null;
