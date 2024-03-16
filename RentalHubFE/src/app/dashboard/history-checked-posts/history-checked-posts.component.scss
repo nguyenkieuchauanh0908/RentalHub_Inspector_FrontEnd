@@ -53,14 +53,6 @@
   hyphens: auto;
 }
 
-// ::ng-deep .mat-mdc-table .mdc-data-table__table .cdk-table {
-//   border-radius: 8px !important;
-// }
-
-// ::ng-deep thead {
-//   border-radius: 8px !important;
-// }
-
 table tr:last-child td /*To remove the last border*/ {
   border-bottom: 0 solid;
   border-radius: 8px !important;
