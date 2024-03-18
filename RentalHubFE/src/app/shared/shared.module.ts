@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NotifierModule } from 'angular-notifier';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { SendForgetPwEmailComponent } from './send-forget-pw-email/send-forget-pw-email.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 
     MainLayoutComponent,
     ConfirmDialogComponent,
+    SendForgetPwEmailComponent,
   ],
   imports: [
     CommonModule,

@@ -78,8 +78,8 @@
           <div *ngIf="pw.errors?.['required']">Vui lòng nhập mật khẩu!</div>
         </div>
       </div>
-      <!-- <div class="flex items-center justify-between">
-        <div class="flex items-start">
+      <div class="flex items-center justify-between">
+        <!-- <div class="flex items-start">
           <div class="flex items-center h-5">
             <input
               id="remember"
@@ -93,13 +93,21 @@
               >Ghi nhớ tài khoản</label
             >
           </div>
-        </div>
-        <a
-          href="#"
-          class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
-          >Quên mật khẩu?</a
-        >
-      </div> -->
+        </div> -->
+        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+          <!-- Chưa có tài khoản?
+          <a
+            [routerLink]="['/auth/signup']"
+            class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+            >Đăng ký ngay</a
+          > -->
+          <a
+            (click)="onForgetPasswordClick()"
+            class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 ml-2"
+            >Quên mật khẩu?</a
+          >
+        </p>
+      </div>
 
       <!-- Submit btn -->
       <button

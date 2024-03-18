@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 
 @NgModule({
   declarations: [AuthComponent, LoginComponent, SignUpComponent],
