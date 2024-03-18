@@ -18,17 +18,17 @@ const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path: 'history-checked-posts',
+        path: 'checked-posts',
         component: HistoryCheckedPostsComponent,
         canActivate: [AuthGuard],
       },
       {
-        path: 'history-denied-posts',
+        path: 'denied-posts',
         component: HistoryDeniedPostsComponent,
         canActivate: [AuthGuard],
       },
       {
-        path: 'history-denied-posts',
+        path: 'denied-posts',
         component: HistoryDeniedPostsComponent,
         canActivate: [AuthGuard],
       },
