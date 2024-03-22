@@ -65,11 +65,15 @@ export class ReportedPostsComponent implements OnInit {
   }
 
   seePost(postDetail: any) {
+    console.log(
+      '🚀 ~ ReportedPostsComponent ~ seePost ~ postDetail._status:',
+      postDetail._status
+    );
     let post = postDetail;
-    if (postDetail._status === 4) {
+    if (postDetail._status === 1) {
       this.postService.getReportPostById(postDetail._id).subscribe((res) => {
         if (res.data) {
-          post = res.data[0];
+          post = res.data;
           console.log(
             '🚀 ~ ReportedPostsComponent ~ this.postService.getReportPostById ~ post:',
             post
