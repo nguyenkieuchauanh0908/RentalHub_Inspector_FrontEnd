@@ -28,11 +28,6 @@ const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path: 'denied-posts',
-        component: HistoryDeniedPostsComponent,
-        canActivate: [AuthGuard],
-      },
-      {
         path: 'reported-posts',
         component: ReportedPostsComponent,
         canActivate: [AuthGuard],

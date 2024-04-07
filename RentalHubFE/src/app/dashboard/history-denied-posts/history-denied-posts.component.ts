@@ -9,6 +9,7 @@ import { PostItem } from 'src/app/posts/posts-list/post-item/post-item.model';
 import { Tags } from 'src/app/shared/tags/tag.model';
 import { PostSensorDialogComponent } from '../post-sensor/post-sensor-dialog/post-sensor-dialog.component';
 import { PaginationService } from 'src/app/shared/pagination/pagination.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-history-denied-posts',
@@ -40,7 +41,8 @@ export class HistoryDeniedPostsComponent {
     private postService: PostService,
     public dialog: MatDialog,
     private notifierService: NotifierService,
-    private paginationService: PaginationService
+    private paginationService: PaginationService,
+    private router: Router
   ) {
     if (this.currentUid) {
       this.myProfile = this.accountService.getProfile(this.currentUid);
@@ -49,8 +51,8 @@ export class HistoryDeniedPostsComponent {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.paginationService.currentPage = 1;
-    this.postService.getPostInspector(3, 1, 5).subscribe(
+    this.currentPage = 1;
+    this.postService.getPostInspector(3, this.currentPage, 5).subscribe(
       (res) => {
         this.dataSource = res.data;
         console.log(
@@ -93,18 +95,55 @@ export class HistoryDeniedPostsComponent {
     });
   }
 
-  changeCurrentPage(position: number) {
-    this.historyPosts = [];
-    this.currentPage = this.paginationService.caculateCurrentPage(position);
-    this.postService
-      .getPostInspector(3, this.currentPage, 5)
-      .subscribe((res) => {
-        if (res.data) {
-          this.dataSource = res.data;
-          this.totalPages = res.pagination.total;
-        } else {
-          this.dataSource = [];
-        }
-      });
+  toPosts(type: string): void {
+    switch (type) {
+      case 'Chờ duyệt':
+        this.router.navigate(['/dashboard/post-sensor']);
+        break;
+      case 'Đã duyệt':
+        this.router.navigate(['/dashboard/checked-posts']);
+        break;
+      case 'Không được duyệt':
+        this.router.navigate(['/dashboard/denied-posts']);
+        break;
+      case 'Bị báo cáo':
+        this.router.navigate(['/dashboard/reported-posts']);
+        break;
+      default:
+    }
+  }
+
+  //position can be either 1 (navigate to next page) or -1 (to previous page)
+  changeCurrentPage(
+    position: number,
+    toFirstPage: boolean,
+    toLastPage: boolean
+  ) {
+    this.isLoading = true;
+    if (position === 1 || position === -1) {
+      this.currentPage = this.paginationService.navigatePage(
+        position,
+        this.currentPage
+      );
+    }
+    if (toFirstPage) {
+      this.currentPage = 1;
+    } else if (toLastPage) {
+      this.currentPage = this.totalPages;
+    }
+    this.postService.getPostInspector(3, this.currentPage, 5).subscribe(
+      (res) => {
+        this.dataSource = res.data;
+        console.log(
+          '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
+          this.dataSource
+        );
+        this.totalPages = res.pagination.total;
+        this.isLoading = false;
+      },
+      (errMsg) => {
+        this.isLoading = false;
+      }
+    );
   }
 }

@@ -28,31 +28,24 @@ export class DashboardComponent implements OnInit {
   myProfile: User | null | undefined;
 
   tabs: Array<Tab> = [
+    // {
+    //   title: 'Thống kê',
+    //   icon: 'poll',
+    //   link: 'statistics',
+    //   active: false,
+    //   subTabs: false,
+    // },
     {
-      title: 'Chờ duyệt',
+      title: 'Quản lý chủ trọ',
+      icon: 'verified_user',
+      link: 'manage-hosts',
+      active: false,
+      subTabs: false,
+    },
+    {
+      title: 'Quản lý bài viết',
       icon: 'list',
       link: 'post-sensor',
-      active: true,
-      subTabs: false,
-    },
-    {
-      title: 'Được duyệt',
-      icon: 'check-circle',
-      link: 'checked-posts',
-      active: false,
-      subTabs: false,
-    },
-    {
-      title: 'Không được duyệt',
-      icon: 'error',
-      link: 'denied-posts',
-      active: false,
-      subTabs: false,
-    },
-    {
-      title: 'Bị báo cáo',
-      icon: 'report',
-      link: 'reported-posts',
       active: false,
       subTabs: false,
     },
