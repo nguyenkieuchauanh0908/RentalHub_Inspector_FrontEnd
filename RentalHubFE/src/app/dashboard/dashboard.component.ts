@@ -107,10 +107,10 @@ export class DashboardComponent implements OnInit {
     this.tabs.forEach((currentTab) => {
       if (currentTab.title === activeTab.title) {
         currentTab.active = true;
+        this.router.navigate(['dashboard/', activeTab.link]);
       } else {
         currentTab.active = false;
       }
     });
-    this.router.navigate(['dashboard/', activeTab.link]);
   }
 }

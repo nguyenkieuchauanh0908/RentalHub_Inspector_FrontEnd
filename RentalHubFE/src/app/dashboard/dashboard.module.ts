@@ -12,9 +12,11 @@ import { AccountEditDialogComponent } from './account-edit-dialog/account-edit-d
 import { UpdateAvatarDialogComponent } from './update-avatar-dialog/update-avatar-dialog.component';
 import { LoginDetailUpdateDialogComponent } from './login-detail-update-dialog/login-detail-update-dialog.component';
 import { ReportedPostsComponent } from './reported-posts/reported-posts.component';
+import { ManageHostsComponent } from './manage-hosts/manage-hosts.component';
+import { HostSensorDialogComponent } from './manage-hosts/host-sensor-dialog/host-sensor-dialog.component';
 
 @NgModule({
-  declarations: [DashboardComponent, PostSensorComponent, PostSensorDialogComponent, HistoryCheckedPostsComponent, HistoryDeniedPostsComponent, AccountEditDialogComponent, UpdateAvatarDialogComponent, LoginDetailUpdateDialogComponent, ReportedPostsComponent],
+  declarations: [DashboardComponent, PostSensorComponent, PostSensorDialogComponent, HistoryCheckedPostsComponent, HistoryDeniedPostsComponent, AccountEditDialogComponent, UpdateAvatarDialogComponent, LoginDetailUpdateDialogComponent, ReportedPostsComponent, ManageHostsComponent, HostSensorDialogComponent],
   imports: [CommonModule, FormsModule, DashboardRoutingModule, SharedModule],
   providers: [],
 })

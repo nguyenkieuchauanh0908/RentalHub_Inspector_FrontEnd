@@ -11,6 +11,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NotifierModule } from 'angular-notifier';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { SendForgetPwEmailComponent } from './send-forget-pw-email/send-forget-pw-email.component';
+import { CommentReasonDialogComponent } from './comment-reason-dialog/comment-reason-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { SendForgetPwEmailComponent } from './send-forget-pw-email/send-forget-p
     MainLayoutComponent,
     ConfirmDialogComponent,
     SendForgetPwEmailComponent,
+    CommentReasonDialogComponent,
   ],
   imports: [
     CommonModule,

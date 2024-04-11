@@ -1,6 +1,6 @@
 <div>
   <mat-drawer-container class="example-container" autosize>
-    <mat-drawer #drawer class="example-sidenav" mode="side">
+    <mat-drawer #drawer class="example-sidenav" mode="over">
       <div
         (click)="drawer.toggle()"
         [ngClass]="drawer.opened ? 'cursor-pointer pt-3 px-2' : 'invisible'"
@@ -27,7 +27,6 @@
         <div *ngFor="let tab of tabs; last as isLast" class="p-0">
           <div
             (click)="checkTabAndNavigate(tab)"
-            class=""
             [ngClass]="
               tab.active === true
                 ? 'inline-flex items-center justify-items-start cursor-pointer text-white bg-primary-700 hover:bg-blue-700 focus:ring-4 font-normal text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-blue-700 w-full'
