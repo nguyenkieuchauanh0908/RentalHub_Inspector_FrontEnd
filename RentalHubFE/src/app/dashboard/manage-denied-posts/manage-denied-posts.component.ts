@@ -7,16 +7,16 @@ import { User } from 'src/app/auth/user.model';
 import { PostService } from 'src/app/posts/post.service';
 import { PostItem } from 'src/app/posts/posts-list/post-item/post-item.model';
 import { Tags } from 'src/app/shared/tags/tag.model';
-import { PostSensorDialogComponent } from '../post-sensor/post-sensor-dialog/post-sensor-dialog.component';
+import { PostSensorDialogComponent } from '../manage-post-sensor/post-sensor-dialog/post-sensor-dialog.component';
 import { PaginationService } from 'src/app/shared/pagination/pagination.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-history-denied-posts',
-  templateUrl: './history-denied-posts.component.html',
-  styleUrls: ['./history-denied-posts.component.scss'],
+  selector: 'app-manage-denied-posts',
+  templateUrl: './manage-denied-posts.component.html',
+  styleUrls: ['./manage-denied-posts.component.scss'],
 })
-export class HistoryDeniedPostsComponent {
+export class ManageDeniedPostsComponent {
   isLoading = false;
   displayedColumns: string[] = [
     'image',

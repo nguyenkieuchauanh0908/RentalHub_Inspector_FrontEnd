@@ -5,17 +5,16 @@ import { AccountService } from 'src/app/accounts/accounts.service';
 import { User } from 'src/app/auth/user.model';
 import { PostService } from 'src/app/posts/post.service';
 import { PostItem } from 'src/app/posts/posts-list/post-item/post-item.model';
-import { PaginationService } from 'src/app/shared/pagination/pagination.service';
 import { Tags } from 'src/app/shared/tags/tag.model';
-import { PostSensorDialogComponent } from '../post-sensor/post-sensor-dialog/post-sensor-dialog.component';
+import { PostSensorDialogComponent } from './post-sensor-dialog/post-sensor-dialog.component';
+import { PaginationService } from 'src/app/shared/pagination/pagination.service';
 import { Router } from '@angular/router';
-
 @Component({
-  selector: 'app-reported-posts',
-  templateUrl: './reported-posts.component.html',
-  styleUrls: ['./reported-posts.component.scss'],
+  selector: 'app-manage-post-sensor',
+  templateUrl: './manage-post-sensor.component.html',
+  styleUrls: ['./manage-post-sensor.component.scss'],
 })
-export class ReportedPostsComponent implements OnInit {
+export class ManagePostSensorComponent implements OnInit {
   isLoading = false;
   displayedColumns: string[] = [
     'image',
@@ -50,12 +49,12 @@ export class ReportedPostsComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.currentPage = 1;
-    this.postService.getReportPostList(this.currentPage, 5).subscribe(
+    this.postService.getPostInspector(0, this.currentPage, 5).subscribe(
       (res) => {
         this.dataSource = res.data;
         console.log(
           '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
-          this.dataSource
+          this.dataSource[0]._images[0]
         );
         this.totalPages = res.pagination.total;
         this.isLoading = false;
@@ -66,53 +65,31 @@ export class ReportedPostsComponent implements OnInit {
     );
   }
 
-  seePost(postDetail: any) {
-    console.log(
-      '🚀 ~ ReportedPostsComponent ~ seePost ~ postDetail._status:',
-      postDetail._status
-    );
-    let post = postDetail;
-    if (postDetail._status === 1) {
-      this.postService.getReportPostById(postDetail._id).subscribe((res) => {
-        if (res.data) {
-          post = res.data;
-          console.log(
-            '🚀 ~ ReportedPostsComponent ~ this.postService.getReportPostById ~ post:',
-            post
-          );
-          //Nếu đã lấy được thông tin của post thì open sensor dialog
-          if (post) {
-            const dialogRef = this.dialog.open(PostSensorDialogComponent, {
-              width: '1000px',
-              data: post,
-            });
+  seePost(post: any) {
+    console.log('Seeing post detail....');
+    const dialogRef = this.dialog.open(PostSensorDialogComponent, {
+      width: '1000px',
+      data: post,
+    });
 
-            let sub = dialogRef.componentInstance.sensorResult.subscribe(
-              (postId) => {
-                if (this.dataSource) {
-                  this.dataSource = this.dataSource.filter(
-                    (post: PostItem) => post._id !== postId
-                  );
-                }
-              }
-            );
-            sub = dialogRef.componentInstance.denySensorResult.subscribe(
-              (postId) => {
-                if (this.dataSource) {
-                  this.dataSource = this.dataSource.filter(
-                    (post: PostItem) => post._id !== postId
-                  );
-                }
-              }
-            );
+    let sub = dialogRef.componentInstance.sensorResult.subscribe((postId) => {
+      if (this.dataSource) {
+        this.dataSource = this.dataSource.filter(
+          (post: PostItem) => post._id !== postId
+        );
+      }
+    });
+    sub = dialogRef.componentInstance.denySensorResult.subscribe((postId) => {
+      if (this.dataSource) {
+        this.dataSource = this.dataSource.filter(
+          (post: PostItem) => post._id !== postId
+        );
+      }
+    });
 
-            dialogRef.afterClosed().subscribe((result) => {
-              sub.unsubscribe();
-            });
-          }
-        }
-      });
-    }
+    dialogRef.afterClosed().subscribe((result) => {
+      sub.unsubscribe();
+    });
   }
 
   toPosts(type: string): void {
@@ -151,12 +128,12 @@ export class ReportedPostsComponent implements OnInit {
     } else if (toLastPage) {
       this.currentPage = this.totalPages;
     }
-    this.postService.getReportPostList(this.currentPage, 5).subscribe(
+    this.postService.getPostInspector(0, this.currentPage, 5).subscribe(
       (res) => {
         this.dataSource = res.data;
         console.log(
           '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
-          this.dataSource
+          this.dataSource[0]._images[0]
         );
         this.totalPages = res.pagination.total;
         this.isLoading = false;

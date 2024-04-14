@@ -263,16 +263,16 @@
             >Ảnh</label
           >
           <div class="bg-white-background rounded-lg">
-            <div class="flex flex-wrap mt-4">
+            <div class="flex flex-row flex-wrap mt-4 w-100">
               <!-- Image -->
               <div
                 *ngFor="let preview of previews; index as index"
-                class="basis-[19%] border-solid border-2 border-indigo-600 p-3 mr-1 relative hover:cursor-not-allowed h-36 w-full"
+                class="xs:basis-[48%] sm:basis-[29%] md:basis-[19%] h-100 border-solid border-2 border-indigo-300 rounded-lg p-3 mr-1 mb-1 relative hover:cursor-default h-36 w-full"
               >
                 <img
                   *ngIf="preview !== ''"
                   [src]="preview"
-                  class="object-fill max-h-28 w-full"
+                  class="object-fill max-h-28 w-full rounded-lg"
                 />
               </div>
             </div>

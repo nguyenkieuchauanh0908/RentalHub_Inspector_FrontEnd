@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { NotifierService } from 'angular-notifier';
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/accounts/accounts.service';
 import { User } from 'src/app/auth/user.model';
 import { PostService } from 'src/app/posts/post.service';
 import { PostItem } from 'src/app/posts/posts-list/post-item/post-item.model';
 import { Tags } from 'src/app/shared/tags/tag.model';
-import { PostSensorDialogComponent } from './post-sensor-dialog/post-sensor-dialog.component';
+import { PostSensorDialogComponent } from '../manage-post-sensor/post-sensor-dialog/post-sensor-dialog.component';
 import { PaginationService } from 'src/app/shared/pagination/pagination.service';
 import { Router } from '@angular/router';
+
 @Component({
-  selector: 'app-post-sensor',
-  templateUrl: './post-sensor.component.html',
-  styleUrls: ['./post-sensor.component.scss'],
+  selector: 'app-manage-checked-posts',
+  templateUrl: './manage-checked-posts.component.html',
+  styleUrls: ['./manage-checked-posts.component.scss'],
 })
-export class PostSensorComponent implements OnInit {
+export class ManageCheckedPostsComponent {
   isLoading = false;
   displayedColumns: string[] = [
     'image',
@@ -38,6 +40,7 @@ export class PostSensorComponent implements OnInit {
     private accountService: AccountService,
     private postService: PostService,
     public dialog: MatDialog,
+    private notifierService: NotifierService,
     private paginationService: PaginationService,
     private router: Router
   ) {
@@ -49,15 +52,16 @@ export class PostSensorComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.currentPage = 1;
-    this.postService.getPostInspector(0, this.currentPage, 5).subscribe(
+    this.currentUid = this.accountService.getCurrentUserId();
+    this.postService.getPostInspector(1, this.currentPage, 5).subscribe(
       (res) => {
+        this.isLoading = false;
         this.dataSource = res.data;
         console.log(
           '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
-          this.dataSource[0]._images[0]
+          this.dataSource
         );
         this.totalPages = res.pagination.total;
-        this.isLoading = false;
       },
       (errMsg) => {
         this.isLoading = false;
@@ -128,15 +132,15 @@ export class PostSensorComponent implements OnInit {
     } else if (toLastPage) {
       this.currentPage = this.totalPages;
     }
-    this.postService.getPostInspector(0, this.currentPage, 5).subscribe(
+    this.postService.getPostInspector(1, this.currentPage, 5).subscribe(
       (res) => {
+        this.isLoading = false;
         this.dataSource = res.data;
         console.log(
           '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
-          this.dataSource[0]._images[0]
+          this.dataSource
         );
         this.totalPages = res.pagination.total;
-        this.isLoading = false;
       },
       (errMsg) => {
         this.isLoading = false;
