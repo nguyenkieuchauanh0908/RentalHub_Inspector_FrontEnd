@@ -11,24 +11,24 @@
         class="space-y-4"
         *ngIf="this.addressReqDetail"
       >
-        <!-- Name -->
-        <!-- <div class="mb-6">
+        <!-- Reason for denied Req -->
+        <div class="mb-6">
           <label
             for="base-input"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Họ & tên</label
+            >Lý do bị từ chối</label
           >
           <input
             type="text"
-            id="name-input"
-            name="name"
-            [ngModel]="this.addressReqDetail!._name"
+            id="home-input"
+            name="home"
+            [ngModel]="this.addressReqDetail!._reason"
             ngModel
             required
             disabled
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 cursor-not-allowed"
           />
-        </div> -->
+        </div>
 
         <!-- address -->
         <div class="mb-6">
