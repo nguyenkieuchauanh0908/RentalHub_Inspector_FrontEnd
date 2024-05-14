@@ -12,6 +12,7 @@ import { NotifierModule } from 'angular-notifier';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { SendForgetPwEmailComponent } from './send-forget-pw-email/send-forget-pw-email.component';
 import { CommentReasonDialogComponent } from './comment-reason-dialog/comment-reason-dialog.component';
+import { DisplayNotiDialogComponent } from './display-noti-dialog/display-noti-dialog.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { CommentReasonDialogComponent } from './comment-reason-dialog/comment-re
     ConfirmDialogComponent,
     SendForgetPwEmailComponent,
     CommentReasonDialogComponent,
+    DisplayNotiDialogComponent,
   ],
   imports: [
     CommonModule,

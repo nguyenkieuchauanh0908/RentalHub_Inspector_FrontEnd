@@ -4,13 +4,13 @@ import { NotifierService } from 'angular-notifier';
 import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { AccountService } from 'src/app/accounts/accounts.service';
 import { User } from 'src/app/auth/user.model';
-import { PostService } from 'src/app/posts/post.service';
 import { NotificationService } from '../notifications/notification.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { resDataDTO } from '../resDataDTO';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateAvatarDialogComponent } from 'src/app/dashboard/update-avatar-dialog/update-avatar-dialog.component';
+import { DisplayNotiDialogComponent } from '../display-noti-dialog/display-noti-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -30,13 +30,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   user!: User | null;
   fullName!: string;
   isAuthenticatedUser: boolean = false;
-  notificationList!: any;
+  seenNotiList!: any;
+  unseenNotificaionList!: any;
   notificationTotals!: number;
+
   $destroy: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private router: Router,
-    private postService: PostService,
     private accountService: AccountService,
     private notifierService: NotifierService,
     private notificationService: NotificationService,
@@ -44,6 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {
     this.accountService.getCurrentUser
+      .pipe(takeUntil(this.$destroy))
       .pipe(takeUntil(this.$destroy))
       .subscribe((user) => {
         console.log('On rendering headers...');
@@ -57,23 +59,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
 
     if (this.isAuthenticatedUser) {
-      this.notificationService.getCurrentNotifications.subscribe(
-        (notifications) => {
-          this.notificationList = notifications;
-        }
-      );
-      this.notificationService.getTotalNotifications.subscribe(
-        (notificationTotal) => {
-          console.log(
-            '🚀 ~ HeaderComponent ~ .subscribe ~ notificationTotal:',
-            notificationTotal
-          );
+      //Lấy các noti đã xem
+      this.notificationService.getCurrentSeenNotifications
+        .pipe(takeUntil(this.$destroy))
+        .subscribe((notifications) => {
+          this.seenNotiList = notifications;
+        });
+
+      //Lấy các noti chưa xem
+      this.notificationService.getCurrentUnseenNotifications
+        .pipe(takeUntil(this.$destroy))
+        .subscribe((unseenNotifications) => {
+          this.unseenNotificaionList = unseenNotifications;
+        });
+
+      //Lấy tổng các noti chưa xem
+      this.notificationService.getTotalNotifications
+        .pipe(takeUntil(this.$destroy))
+        .subscribe((notificationTotal) => {
           this.notificationTotals = notificationTotal;
-        }
-      );
+        });
     } else {
       this.notificationTotals = 0;
-      this.notificationService.setCurrentNotifications([]);
+      this.notificationService.setCurrentSeenNotifications([]);
+      this.notificationService.setCurrentUnseenNotifications([]);
     }
   }
 
@@ -93,55 +102,46 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  toSeeAllNotifications() {
-    this.router.navigate(['/profile/notifications/', this.user?._id]);
-  }
-
-  onSearchByKeyword(searchForm: any) {
-    console.log('Your keyword: ', searchForm.search);
-    if (searchForm.search) {
-      this.postService
-        .searchPostsByKeyword(searchForm.search, 1, 5)
+  markAsReadAll() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: 'Bạn có chắc muốn đánh dấu đã đọc tất cả thông báo?',
+    });
+    const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
+      this.notificationService
+        .markAsReadAll()
         .pipe(takeUntil(this.$destroy))
         .subscribe(
           (res) => {
-            this.postService.searchResultsChanged.next([...res.data]);
-            console.log('On navigating to search result page...');
-            this.router.navigate(
-              [
-                '/posts/search',
-                {
-                  keyword: searchForm.search,
-                },
-              ],
-              {
-                state: {
-                  searchResult: res.data,
-                  pagination: res.pagination,
-                  keyword: searchForm.search,
-                },
-              }
-            );
+            if (res.data) {
+              this.notifierService.notify(
+                'success',
+                'Đánh dấu đã đọc toàn bộ thông báo thành công'
+              );
+            }
           },
-          (errorMsg) => {
-            this.isLoading = false;
-            this.error = errorMsg;
-            console.log(this.error);
-            this.notifierService.notify('error', errorMsg);
+          (errMsg) => {
+            this.notifierService.notify(
+              'error',
+              'Đã có lỗi xảy ra, vui lòng thử lại sau'
+            );
           }
         );
-    } else {
-      this.router.navigate(['']).then(() => {
-        window.location.reload();
-      });
-    }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      sub.unsubscribe();
+    });
+  }
+
+  readNotiDetail(noti: any) {
+    const dialog = this.dialog.open(DisplayNotiDialogComponent, {
+      width: '600px',
+      data: noti,
+    });
   }
 
   toHome() {
     this.router.navigate(['']);
-    // .then(() => {
-    //   window.location.reload();
-    // });
   }
 
   ngOnDestroy() {
@@ -149,23 +149,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    //   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    //     width: '400px',
-    //     data: 'Bạn có chắc muốn đăng xuất?',
-    //   });
-    //   const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
-    //     let logoutObs: Observable<resDataDTO>;
-    //     logoutObs = this.authService.logout(this.user?.RFToken);
-    //     logoutObs.subscribe();
-    //     this.router.navigate(['/posts']);
-    //   });
-    //   dialogRef.afterClosed().subscribe(() => {
-    //     sub.unsubscribe();
-    //   });
-    let logoutObs: Observable<resDataDTO>;
-    logoutObs = this.authService.logout(this.user?.RFToken);
-    logoutObs.subscribe();
-    this.router.navigate(['/posts']);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: 'Bạn có chắc muốn đăng xuất?',
+    });
+    const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
+      let logoutObs: Observable<resDataDTO>;
+      logoutObs = this.authService.logout(this.user?.RFToken);
+      logoutObs.subscribe();
+      this.router.navigate(['/auth/login']);
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      sub.unsubscribe();
+    });
   }
 
   updateAvatar() {
