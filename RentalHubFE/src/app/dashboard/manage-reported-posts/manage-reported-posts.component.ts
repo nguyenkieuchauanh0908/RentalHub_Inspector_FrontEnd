@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
-import { AccountService } from 'src/app/accounts/accounts.service';
-import { User } from 'src/app/auth/user.model';
+import { Subject, takeUntil } from 'rxjs';
 import { PostService } from 'src/app/posts/post.service';
 import { PostItem } from 'src/app/posts/posts-list/post-item/post-item.model';
 import { PaginationService } from 'src/app/shared/pagination/pagination.service';
-import { Tags } from 'src/app/shared/tags/tag.model';
 import { PostSensorDialogComponent } from '../manage-post-sensor/post-sensor-dialog/post-sensor-dialog.component';
 import { Router } from '@angular/router';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'app-manage-reported-posts',
@@ -17,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class ManageReportedPostsComponent implements OnInit {
   isLoading = false;
+  $destroy: Subject<boolean> = new Subject<boolean>();
   displayedColumns: string[] = [
     'image',
     'title',
@@ -25,61 +24,72 @@ export class ManageReportedPostsComponent implements OnInit {
     'lastUpdate',
   ];
   dataSource!: PostItem[];
-  myProfile!: User | null;
-  currentUid!: string | null;
-  historyPosts: PostItem[] = new Array<PostItem>();
+  onSearching: boolean = false;
+  searchKeyword: string | null = null;
   totalPages: number = 1;
   currentPage: number = 1;
   pageItemLimit: number = 5;
-  myProfileSub = new Subscription();
-  getTagSub = new Subscription();
-  sourceTags: Set<Tags> = new Set();
 
   constructor(
-    private accountService: AccountService,
     private postService: PostService,
     public dialog: MatDialog,
     private paginationService: PaginationService,
-    private router: Router
-  ) {
-    if (this.currentUid) {
-      this.myProfile = this.accountService.getProfile(this.currentUid);
-    }
-  }
+    private router: Router,
+    private notifierService: NotifierService
+  ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
     this.currentPage = 1;
-    this.postService.getReportPostList(this.currentPage, 5).subscribe(
-      (res) => {
-        this.dataSource = res.data;
-        console.log(
-          '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
-          this.dataSource
+    if (!this.onSearching) {
+      this.postService
+        .getReportPostList(this.currentPage, this.pageItemLimit)
+        .subscribe(
+          (res) => {
+            this.dataSource = res.data;
+            this.totalPages = res.pagination.total;
+            this.isLoading = false;
+          },
+          (errMsg) => {
+            this.isLoading = false;
+          }
         );
-        this.totalPages = res.pagination.total;
-        this.isLoading = false;
-      },
-      (errMsg) => {
-        this.isLoading = false;
-      }
-    );
+    } else {
+      this.postService
+        .findPostByIdAndStatus(
+          this.searchKeyword!,
+          '4',
+          this.currentPage,
+          this.pageItemLimit
+        )
+        .pipe(takeUntil(this.$destroy))
+        .subscribe(
+          (res) => {
+            if (res.data) {
+              this.isLoading = false;
+              this.dataSource = [];
+              this.totalPages = res.pagination.total;
+              this.dataSource = res.data;
+            }
+            this.isLoading = false;
+          },
+          (err) => {
+            this.isLoading = false;
+            this.notifierService.notify(
+              'error',
+              'Không có kết quả tìm kiếm trùng khớp!'
+            );
+          }
+        );
+    }
   }
 
   seePost(postDetail: any) {
-    console.log(
-      '🚀 ~ ReportedPostsComponent ~ seePost ~ postDetail._status:',
-      postDetail._status
-    );
     let post = postDetail;
     if (postDetail._status === 1) {
       this.postService.getReportPostById(postDetail._id).subscribe((res) => {
         if (res.data) {
           post = res.data;
-          console.log(
-            '🚀 ~ ReportedPostsComponent ~ this.postService.getReportPostById ~ post:',
-            post
-          );
           //Nếu đã lấy được thông tin của post thì open sensor dialog
           if (post) {
             const dialogRef = this.dialog.open(PostSensorDialogComponent, {
@@ -137,7 +147,8 @@ export class ManageReportedPostsComponent implements OnInit {
   changeCurrentPage(
     position: number,
     toFirstPage: boolean,
-    toLastPage: boolean
+    toLastPage: boolean,
+    onSearching: boolean
   ) {
     this.isLoading = true;
     if (position === 1 || position === -1) {
@@ -151,19 +162,95 @@ export class ManageReportedPostsComponent implements OnInit {
     } else if (toLastPage) {
       this.currentPage = this.totalPages;
     }
-    this.postService.getReportPostList(this.currentPage, 5).subscribe(
-      (res) => {
-        this.dataSource = res.data;
-        console.log(
-          '🚀 ~ file: post-sensor.component.ts:49 ~ PostSensorComponent ~ this.postService.getPostsHistory ~  this.dataSource:',
-          this.dataSource
+
+    if (!onSearching) {
+      this.postService
+        .getReportPostList(this.currentPage, this.pageItemLimit)
+        .subscribe(
+          (res) => {
+            this.dataSource = res.data;
+            this.totalPages = res.pagination.total;
+            this.isLoading = false;
+          },
+          (errMsg) => {
+            this.isLoading = false;
+          }
         );
-        this.totalPages = res.pagination.total;
-        this.isLoading = false;
-      },
-      (errMsg) => {
-        this.isLoading = false;
-      }
-    );
+    } else {
+      this.postService
+        .findPostByIdAndStatus(
+          this.searchKeyword!,
+          '4',
+          this.currentPage,
+          this.pageItemLimit
+        )
+        .pipe(takeUntil(this.$destroy))
+        .subscribe(
+          (res) => {
+            if (res.data) {
+              this.isLoading = false;
+              this.dataSource = [];
+              this.totalPages = res.pagination.total;
+              this.dataSource = res.data;
+            }
+            this.isLoading = false;
+          },
+          (err) => {
+            this.isLoading = false;
+            this.notifierService.notify(
+              'error',
+              'Không có kết quả tìm kiếm trùng khớp!'
+            );
+          }
+        );
+    }
+  }
+  reloadData() {
+    this.isLoading = true;
+    this.onSearching = false;
+    this.searchKeyword = null;
+    this.currentPage = 1;
+    this.postService
+      .getReportPostList(this.currentPage, this.pageItemLimit)
+      .subscribe(
+        (res) => {
+          this.dataSource = res.data;
+          this.totalPages = res.pagination.total;
+          this.isLoading = false;
+        },
+        (errMsg) => {
+          this.isLoading = false;
+        }
+      );
+  }
+
+  search(form: any) {
+    this.isLoading = true;
+    this.onSearching = true;
+    if (form.keyword) {
+      this.searchKeyword = form.keyword;
+      this.postService
+        .findPostByIdAndStatus(this.searchKeyword!, '4', 1, this.pageItemLimit)
+        .pipe(takeUntil(this.$destroy))
+        .subscribe(
+          (res) => {
+            if (res.data) {
+              this.isLoading = false;
+              this.dataSource = [];
+              this.currentPage = 1;
+              this.totalPages = res.pagination.total;
+              this.dataSource = res.data;
+            }
+            this.isLoading = false;
+          },
+          (err) => {
+            this.isLoading = false;
+            this.notifierService.notify(
+              'error',
+              'Không có kết quả tìm kiếm trùng khớp!'
+            );
+          }
+        );
+    }
   }
 }

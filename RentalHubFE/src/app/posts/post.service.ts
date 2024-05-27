@@ -210,6 +210,29 @@ export class PostService {
       .pipe(catchError(handleError));
   }
 
+  findPostByIdAndStatus(
+    id: string,
+    status: string | null,
+    page: number,
+    limit: number
+  ) {
+    let queryParams = new HttpParams()
+      .append('keyword', id)
+      .append('page', page)
+      .append('limit', limit);
+    if (status) {
+      queryParams = queryParams.append('status', status);
+    }
+    return this.http
+      .get<resDataDTO>(
+        environment.baseUrl + 'posts/inspector-get-post-keyword',
+        {
+          params: queryParams,
+        }
+      )
+      .pipe(catchError(handleError));
+  }
+
   sensorPost(postId: string, status: number) {
     return this.http
       .patch<resDataDTO>(environment.baseUrl + 'posts/sensor-post/' + postId, {

@@ -21,6 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatRippleModule } from '@angular/material/core';
 @NgModule({
   declarations: [],
   imports: [
@@ -46,6 +47,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatMenuModule,
     MatChipsModule,
     MatTabsModule,
+    MatRippleModule,
   ],
   exports: [
     MatDividerModule,
@@ -70,6 +72,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatMenuModule,
     MatChipsModule,
     MatTabsModule,
+    MatRippleModule,
   ],
 })
 export class NgMaterialsModule {}
