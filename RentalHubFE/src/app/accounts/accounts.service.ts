@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ErrorHandler, Injectable } from '@angular/core';
 import { resDataDTO } from '../shared/resDataDTO';
 import { environment } from 'src/environments/environment';
@@ -142,6 +142,17 @@ export class AccountService {
         _email: email,
         _pw: pw,
         _pwconfirm: repw,
+      })
+      .pipe(catchError(handleError));
+  }
+  findHostByEmailOrId(keyword: string, status: string | null) {
+    let queryParams = new HttpParams().append('keyword', keyword);
+    if (status) {
+      queryParams = queryParams.append('status', status);
+    }
+    return this.http
+      .get<resDataDTO>(environment.baseUrl + 'inspector/get-host-keyword', {
+        params: queryParams,
       })
       .pipe(catchError(handleError));
   }

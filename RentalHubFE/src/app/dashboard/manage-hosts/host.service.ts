@@ -34,12 +34,22 @@ export class HostService {
   }
 
   sensorHostRequest(identId: string, status: number, reason: string) {
-    console.log('🚀 ~ HostService ~ sensorHostRequest ~ reason:', reason);
     return this.http
       .patch<resDataDTO>(environment.baseUrl + 'inspector/sensor-active-host', {
         identId: identId,
         status: status,
         reason: reason,
+      })
+      .pipe(catchError(handleError));
+  }
+
+  findHostByIdentId(numberCard: string, sensor: boolean) {
+    let queryParams = new HttpParams()
+      .append('numberCard', numberCard)
+      .append('sensor', sensor);
+    return this.http
+      .get<resDataDTO>(environment.baseUrl + 'inspector/search-identity', {
+        params: queryParams,
       })
       .pipe(catchError(handleError));
   }

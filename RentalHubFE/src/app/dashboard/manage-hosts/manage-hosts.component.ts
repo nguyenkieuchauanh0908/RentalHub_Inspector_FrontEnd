@@ -26,7 +26,7 @@ export class ManageHostsComponent {
     'address',
     'date',
   ];
-  dataSource!: any[];
+  dataSource!: any[] | null;
   totalPages: number = 1;
   currentPage: number = 1;
   pageItemLimit: number = 5;
@@ -152,7 +152,7 @@ export class ManageHostsComponent {
       default:
     }
     this.currentPage = 1;
-    this.dataSource = [];
+    this.dataSource = null;
     this.hostService
       .getActiveHostByRequests(
         this.currentHostReqStatus,
@@ -196,8 +196,13 @@ export class ManageHostsComponent {
 
   search(form: any) {
     this.isLoading = true;
-    this.accountService
-      .findHostByEmailOrId(form.keyword, this.currentHostReqStatus.toString())
+    let sensor = false;
+    if (this.currentHostReqStatus === 1) {
+      sensor = true;
+    } else {
+    }
+    this.hostService
+      .findHostByIdentId(form.keyword, sensor)
       .pipe(takeUntil(this.$destroy))
       .subscribe(
         (res) => {
