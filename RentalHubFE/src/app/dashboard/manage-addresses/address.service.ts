@@ -58,4 +58,22 @@ export class AddressService {
       )
       .pipe(catchError(handleError));
   }
+
+  searchAddressesById(
+    addressId: string,
+    active: boolean,
+    page: number,
+    limit: number
+  ) {
+    let queryParams = new HttpParams()
+      .append('keyword', addressId)
+      .append('active', active)
+      .append('page', page)
+      .append('limit', limit);
+    return this.http
+      .get<resDataDTO>(environment.baseUrl + 'inspector/search-address', {
+        params: queryParams,
+      })
+      .pipe(catchError(handleError));
+  }
 }

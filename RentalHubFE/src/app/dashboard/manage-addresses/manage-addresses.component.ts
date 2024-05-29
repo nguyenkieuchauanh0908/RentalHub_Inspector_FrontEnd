@@ -1,24 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { AccountService } from 'src/app/accounts/accounts.service';
 import { User } from 'src/app/auth/user.model';
-import { PostService } from 'src/app/posts/post.service';
 import { PaginationService } from 'src/app/shared/pagination/pagination.service';
-import { HostSensorDialogComponent } from '../manage-hosts/host-sensor-dialog/host-sensor-dialog.component';
 import { Hosts } from '../manage-hosts/host.model';
 import { AddressService } from './address.service';
 import { AddressSensorDialogComponent } from './address-sensor-dialog/address-sensor-dialog.component';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'app-manage-addresses',
   templateUrl: './manage-addresses.component.html',
   styleUrls: ['./manage-addresses.component.scss'],
 })
-export class ManageAddressesComponent {
+export class ManageAddressesComponent implements OnInit, OnDestroy {
+  $destroy: Subject<boolean> = new Subject<boolean>();
   isLoading = false;
   displayedColumns: string[] = ['id', 'name', 'address', 'total_rooms', 'date'];
-  dataSource!: any[];
+  dataSource!: any[] | null;
   myProfile!: User | null;
   currentUid!: string | null;
   totalPages: number = 1;
@@ -31,8 +31,14 @@ export class ManageAddressesComponent {
     private accountService: AccountService,
     public dialog: MatDialog,
     private paginationService: PaginationService,
-    private addressService: AddressService
-  ) {
+    private addressService: AddressService,
+    private notifierService: NotifierService
+  ) {}
+  ngOnDestroy(): void {
+    this.$destroy.unsubscribe();
+  }
+
+  ngOnInit() {
     this.isLoading = true;
     this.currentPage = 1;
     this.currentAddressReqStatus = 0;
@@ -40,7 +46,11 @@ export class ManageAddressesComponent {
       this.myProfile = this.accountService.getProfile(this.currentUid);
     }
     this.addressService
-      .getAddressesRequests(this.currentAddressReqStatus, 1, 5)
+      .getAddressesRequests(
+        this.currentAddressReqStatus,
+        this.currentPage,
+        this.pageItemLimit
+      )
       .subscribe(
         (res) => {
           if (res.data) {
@@ -55,8 +65,6 @@ export class ManageAddressesComponent {
         }
       );
   }
-
-  ngOnInit(): void {}
 
   //Xem chi tiết hồ sơ đăng ký địa chỉ
   seeDetail(addressReq: any) {
@@ -108,7 +116,11 @@ export class ManageAddressesComponent {
       this.currentPage = this.totalPages;
     }
     this.addressService
-      .getAddressesRequests(this.currentAddressReqStatus, this.currentPage, 5)
+      .getAddressesRequests(
+        this.currentAddressReqStatus,
+        this.currentPage,
+        this.pageItemLimit
+      )
       .subscribe(
         (res) => {
           if (res.data) {
@@ -141,17 +153,21 @@ export class ManageAddressesComponent {
       default:
     }
     this.currentPage = 1;
-    this.dataSource = [];
+    this.dataSource = null;
     this.addressService
-      .getAddressesRequests(this.currentAddressReqStatus, 1, 5)
+      .getAddressesRequests(
+        this.currentAddressReqStatus,
+        this.currentPage,
+        this.pageItemLimit
+      )
       .subscribe(
         (res) => {
           if (res.data) {
             this.dataSource = res.data;
-            console.log(
-              '🚀 ~ ManageHostsComponent ~ changeStatusOfHosts ~ this.dataSource:',
-              this.dataSource
-            );
+            // console.log(
+            //   '🚀 ~ ManageHostsComponent ~ changeStatusOfHosts ~ this.dataSource:',
+            //   this.dataSource
+            // );
             this.totalPages = res.pagination.total;
           }
 
@@ -159,6 +175,60 @@ export class ManageAddressesComponent {
         },
         (errMsg) => {
           this.isLoading = false;
+        }
+      );
+  }
+
+  reloadData() {
+    this.isLoading = true;
+    this.currentPage = 1;
+    this.addressService
+      .getAddressesRequests(
+        this.currentAddressReqStatus,
+        this.currentPage,
+        this.pageItemLimit
+      )
+      .subscribe(
+        (res) => {
+          if (res.data) {
+            this.dataSource = res.data;
+            this.totalPages = res.pagination.total;
+          }
+
+          this.isLoading = false;
+        },
+        (errMsg) => {
+          this.isLoading = false;
+        }
+      );
+  }
+
+  search(form: any) {
+    this.isLoading = true;
+    let active: boolean = false;
+    if (this.currentAddressReqStatus === 1) {
+      active = true;
+    }
+    this.addressService
+      .searchAddressesById(form.keyword, active, 1, this.pageItemLimit)
+      .pipe(takeUntil(this.$destroy))
+      .subscribe(
+        (res) => {
+          if (res.data) {
+            this.isLoading = false;
+            this.dataSource = [];
+            this.currentPage = 1;
+            this.totalPages = 1;
+            this.dataSource = res.data;
+          }
+          this.isLoading = false;
+        },
+        (err) => {
+          this.isLoading = false;
+          this.notifierService.notify(
+            'error',
+            'Không có kết quả tìm kiếm trùng khớp!'
+          );
         }
       );
   }

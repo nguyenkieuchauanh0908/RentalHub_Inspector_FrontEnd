@@ -1,9 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { AccountService } from 'src/app/accounts/accounts.service';
-import { User } from 'src/app/auth/user.model';
-import { PostService } from 'src/app/posts/post.service';
 import { PaginationService } from 'src/app/shared/pagination/pagination.service';
 import { HostService } from './host.service';
 import { Hosts } from './host.model';
@@ -15,7 +13,7 @@ import { NotifierService } from 'angular-notifier';
   templateUrl: './manage-hosts.component.html',
   styleUrls: ['./manage-hosts.component.scss'],
 })
-export class ManageHostsComponent {
+export class ManageHostsComponent implements OnInit, OnDestroy {
   isLoading = false;
   $destroy: Subject<boolean> = new Subject<boolean>();
   displayedColumns: string[] = [
@@ -39,6 +37,9 @@ export class ManageHostsComponent {
     private hostService: HostService,
     private notifierService: NotifierService
   ) {}
+  ngOnDestroy(): void {
+    this.$destroy.unsubscribe();
+  }
 
   ngOnInit() {
     this.isLoading = true;

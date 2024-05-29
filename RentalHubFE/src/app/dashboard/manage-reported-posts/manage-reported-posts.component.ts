@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { PostService } from 'src/app/posts/post.service';
@@ -13,7 +13,7 @@ import { NotifierService } from 'angular-notifier';
   templateUrl: './manage-reported-posts.component.html',
   styleUrls: ['./manage-reported-posts.component.scss'],
 })
-export class ManageReportedPostsComponent implements OnInit {
+export class ManageReportedPostsComponent implements OnInit, OnDestroy {
   isLoading = false;
   $destroy: Subject<boolean> = new Subject<boolean>();
   displayedColumns: string[] = [
@@ -37,6 +37,9 @@ export class ManageReportedPostsComponent implements OnInit {
     private router: Router,
     private notifierService: NotifierService
   ) {}
+  ngOnDestroy(): void {
+    this.$destroy.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.isLoading = true;
