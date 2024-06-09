@@ -9,6 +9,7 @@ import { User } from './user.model';
 import { AccountService } from '../accounts/accounts.service';
 import { NotifierService } from 'angular-notifier';
 import { NotificationService } from '../shared/notifications/notification.service';
+import { SocketService } from '../shared/socket.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +29,8 @@ export class AuthService {
     private router: Router,
     private accountService: AccountService,
     private notifierService: NotifierService,
-    private notiService: NotificationService
+    private notiService: NotificationService,
+    private socketService: SocketService
   ) {
     this.user.subscribe((user) => {
       if (user) {
@@ -48,6 +50,8 @@ export class AuthService {
         catchError(handleError),
         tap((res) => {
           this.handleAuthentication(res.data);
+          this.getNotifications();
+          this.socketService.initiateSocket();
         })
       );
   }
@@ -91,6 +95,7 @@ export class AuthService {
       this.autoLogout(expirationDuration, loadedUserData.RFToken);
       if (expirationDuration !== 0) {
         this.getNotifications();
+        this.socketService.initiateSocket();
       }
     } else {
       return;
@@ -122,12 +127,15 @@ export class AuthService {
       .pipe(
         catchError(handleError),
         tap((res) => {
-          this.notifierService.hideAll();
-          this.notifierService.notify('success', 'Đăng  xuất thành công!');
-          this.notiService.setCurrentSeenNotifications([]);
-          this.notiService.setCurrentUnseenNotifications([]);
-          this.notiService.setTotalNotifications(0);
-          this.accountService.setCurrentUser(null);
+          if (res.data) {
+            this.notifierService.hideAll();
+            this.notifierService.notify('success', 'Đăng  xuất thành công!');
+            this.notiService.setCurrentSeenNotifications([]);
+            this.notiService.setCurrentUnseenNotifications([]);
+            this.notiService.setTotalNotifications(0);
+            this.accountService.setCurrentUser(null);
+            this.socketService.disconnectToSocket();
+          }
         })
       );
   }
