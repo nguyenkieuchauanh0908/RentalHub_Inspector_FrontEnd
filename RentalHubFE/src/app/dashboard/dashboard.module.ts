@@ -16,9 +16,11 @@ import { ManageHostsComponent } from './manage-hosts/manage-hosts.component';
 import { HostSensorDialogComponent } from './manage-hosts/host-sensor-dialog/host-sensor-dialog.component';
 import { ManageAddressesComponent } from './manage-addresses/manage-addresses.component';
 import { AddressSensorDialogComponent } from './manage-addresses/address-sensor-dialog/address-sensor-dialog.component';
+import { ManageForumComponent } from './manage-forum/manage-forum.component';
+import { ForumPostSensorDialogComponent } from './manage-forum/forum-post-sensor-dialog/forum-post-sensor-dialog.component';
 
 @NgModule({
-  declarations: [DashboardComponent, ManagePostSensorComponent, PostSensorDialogComponent, ManageCheckedPostsComponent, ManageDeniedPostsComponent, AccountEditDialogComponent, UpdateAvatarDialogComponent, LoginDetailUpdateDialogComponent, ManageReportedPostsComponent, ManageHostsComponent, HostSensorDialogComponent, ManageAddressesComponent, AddressSensorDialogComponent],
+  declarations: [DashboardComponent, ManagePostSensorComponent, PostSensorDialogComponent, ManageCheckedPostsComponent, ManageDeniedPostsComponent, AccountEditDialogComponent, UpdateAvatarDialogComponent, LoginDetailUpdateDialogComponent, ManageReportedPostsComponent, ManageHostsComponent, HostSensorDialogComponent, ManageAddressesComponent, AddressSensorDialogComponent, ManageForumComponent, ForumPostSensorDialogComponent],
   imports: [CommonModule, FormsModule, DashboardRoutingModule, SharedModule],
   providers: [],
 })

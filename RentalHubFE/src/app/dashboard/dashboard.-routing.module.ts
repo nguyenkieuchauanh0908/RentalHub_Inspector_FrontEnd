@@ -8,6 +8,7 @@ import { ManageDeniedPostsComponent } from './manage-denied-posts/manage-denied-
 import { ManageReportedPostsComponent } from './manage-reported-posts/manage-reported-posts.component';
 import { ManageHostsComponent } from './manage-hosts/manage-hosts.component';
 import { ManageAddressesComponent } from './manage-addresses/manage-addresses.component';
+import { ManageForumComponent } from './manage-forum/manage-forum.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,11 @@ const routes: Routes = [
       {
         path: 'manage-addresses',
         component: ManageAddressesComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'manage-forum',
+        component: ManageForumComponent,
         canActivate: [AuthGuard],
       },
       {
