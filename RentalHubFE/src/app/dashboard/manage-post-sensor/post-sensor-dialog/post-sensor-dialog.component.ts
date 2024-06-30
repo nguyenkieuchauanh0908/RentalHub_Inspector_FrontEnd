@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotifierService } from 'angular-notifier';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { User } from 'src/app/auth/user.model';
 import { PostService } from 'src/app/posts/post.service';
 import { PostItem } from 'src/app/posts/posts-list/post-item/post-item.model';
@@ -23,9 +23,8 @@ import { Tags } from 'src/app/shared/tags/tag.model';
 })
 export class PostSensorDialogComponent implements OnInit, OnDestroy {
   @ViewChild('contentToDisplay') contentToDisplay: ElementRef | undefined;
-  private getProfileSub!: Subscription;
-  private getPostHistorySub!: Subscription;
   isLoading = false;
+  $destroy: Subject<boolean> = new Subject();
   seeMore: boolean = false;
   post: any | null = null;
   profile!: User | null;
@@ -67,7 +66,8 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
     this.post = data;
   }
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    this.$destroy.next(true);
+    this.$destroy.unsubscribe();
   }
   ngAfterViewInit(): void {
     setTimeout(() => this.attachingInnerHtmlContent(), 100);
@@ -98,19 +98,26 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
     });
     const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
       this.isLoading = true;
-      this.postService.sensorPost(this.data._id, 3).subscribe(
-        (res) => {
-          if (res.data) {
+      this.postService
+        .sensorPost(this.data._id, 3)
+        .pipe(takeUntil(this.$destroy))
+        .subscribe(
+          (res) => {
+            if (res.data) {
+              this.isLoading = false;
+              this.denySensorResult.emit(this.data._id);
+              this.dialog.closeAll();
+              this.notifierService.hideAll();
+              this.notifierService.notify(
+                'success',
+                'Từ chối duyệt thành công!'
+              );
+            }
+          },
+          (errMsg) => {
             this.isLoading = false;
-            this.denySensorResult.emit(this.data._id);
-            this.notifierService.hideAll();
-            this.notifierService.notify('success', 'Từ chối duyệt thành công!');
           }
-        },
-        (errMsg) => {
-          this.isLoading = false;
-        }
-      );
+        );
     });
     dialogRef.afterClosed().subscribe(() => {
       sub.unsubscribe();
@@ -153,19 +160,25 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
     });
     const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
       this.isLoading = true;
-      this.postService.removePost(this.data._id).subscribe(
-        (res) => {
-          if (res.data) {
+      this.postService
+        .removePost(this.data._id)
+        .pipe(takeUntil(this.$destroy))
+        .subscribe(
+          (res) => {
+            if (res.data) {
+              this.isLoading = false;
+              this.sensorResult.emit(this.data._id);
+              this.notifierService.hideAll();
+              this.notifierService.notify(
+                'success',
+                'Khóa bài viết thành công!'
+              );
+            }
+          },
+          (errMsg) => {
             this.isLoading = false;
-            this.sensorResult.emit(this.data._id);
-            this.notifierService.hideAll();
-            this.notifierService.notify('success', 'Khóa bài viết thành công!');
           }
-        },
-        (errMsg) => {
-          this.isLoading = false;
-        }
-      );
+        );
     });
     dialogRef.afterClosed().subscribe(() => {
       sub.unsubscribe();
