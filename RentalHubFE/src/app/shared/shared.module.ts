@@ -13,6 +13,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { SendForgetPwEmailComponent } from './send-forget-pw-email/send-forget-pw-email.component';
 import { CommentReasonDialogComponent } from './comment-reason-dialog/comment-reason-dialog.component';
 import { DisplayNotiDialogComponent } from './display-noti-dialog/display-noti-dialog.component';
+import { SliderComponent } from './slider/slider.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { DisplayNotiDialogComponent } from './display-noti-dialog/display-noti-d
     SendForgetPwEmailComponent,
     CommentReasonDialogComponent,
     DisplayNotiDialogComponent,
+    SliderComponent,
   ],
   imports: [
     CommonModule,
@@ -46,6 +48,7 @@ import { DisplayNotiDialogComponent } from './display-noti-dialog/display-noti-d
     MainLayoutComponent,
     NotifierModule,
     ReactiveFormsModule,
+    SliderComponent,
   ],
 })
 export class SharedModule {}

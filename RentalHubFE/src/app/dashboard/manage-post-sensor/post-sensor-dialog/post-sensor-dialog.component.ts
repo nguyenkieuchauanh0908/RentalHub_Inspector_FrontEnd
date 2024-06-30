@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotifierService } from 'angular-notifier';
 import { Subscription } from 'rxjs';
@@ -13,10 +21,13 @@ import { Tags } from 'src/app/shared/tags/tag.model';
   templateUrl: './post-sensor-dialog.component.html',
   styleUrls: ['./post-sensor-dialog.component.scss'],
 })
-export class PostSensorDialogComponent {
+export class PostSensorDialogComponent implements OnInit, OnDestroy {
+  @ViewChild('contentToDisplay') contentToDisplay: ElementRef | undefined;
   private getProfileSub!: Subscription;
   private getPostHistorySub!: Subscription;
   isLoading = false;
+  seeMore: boolean = false;
+  post: any | null = null;
   profile!: User | null;
   currentUid!: string | null;
   myProfile!: User | null;
@@ -53,6 +64,13 @@ export class PostSensorDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     console.log('🚀 ~ PostSensorDialogComponent ~ data:', this.data);
+    this.post = data;
+  }
+  ngOnDestroy(): void {
+    throw new Error('Method not implemented.');
+  }
+  ngAfterViewInit(): void {
+    setTimeout(() => this.attachingInnerHtmlContent(), 100);
   }
 
   ngOnInit(): void {
@@ -62,6 +80,15 @@ export class PostSensorDialogComponent {
     this.postService.getCurrentChosenTags.subscribe((tags) => {
       this.selectedTags = tags;
     });
+  }
+
+  attachingInnerHtmlContent() {
+    if (this.contentToDisplay) {
+      this.contentToDisplay.nativeElement.innerHTML = this.post._content;
+    } else {
+      console.log('contentToDisplay is not ready yet');
+      setTimeout(() => this.attachingInnerHtmlContent(), 100);
+    }
   }
 
   denyPost() {
@@ -143,5 +170,9 @@ export class PostSensorDialogComponent {
     dialogRef.afterClosed().subscribe(() => {
       sub.unsubscribe();
     });
+  }
+
+  seeMoreContentClick() {
+    this.seeMore = !this.seeMore;
   }
 }
