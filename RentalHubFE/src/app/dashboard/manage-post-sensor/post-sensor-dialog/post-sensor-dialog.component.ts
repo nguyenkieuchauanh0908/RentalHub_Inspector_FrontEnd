@@ -99,7 +99,7 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
     const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
       this.isLoading = true;
       this.postService
-        .sensorPost(this.data._id, 3)
+        .sensorPost(this.data._postId, 3)
         .pipe(takeUntil(this.$destroy))
         .subscribe(
           (res) => {
