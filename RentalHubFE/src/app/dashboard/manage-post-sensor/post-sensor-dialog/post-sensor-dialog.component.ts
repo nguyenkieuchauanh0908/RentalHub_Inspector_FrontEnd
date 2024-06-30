@@ -1,7 +1,15 @@
-import { Component, EventEmitter, Inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotifierService } from 'angular-notifier';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { User } from 'src/app/auth/user.model';
 import { PostService } from 'src/app/posts/post.service';
 import { PostItem } from 'src/app/posts/posts-list/post-item/post-item.model';
@@ -13,10 +21,12 @@ import { Tags } from 'src/app/shared/tags/tag.model';
   templateUrl: './post-sensor-dialog.component.html',
   styleUrls: ['./post-sensor-dialog.component.scss'],
 })
-export class PostSensorDialogComponent {
-  private getProfileSub!: Subscription;
-  private getPostHistorySub!: Subscription;
+export class PostSensorDialogComponent implements OnInit, OnDestroy {
+  @ViewChild('contentToDisplay') contentToDisplay: ElementRef | undefined;
   isLoading = false;
+  $destroy: Subject<boolean> = new Subject();
+  seeMore: boolean = false;
+  post: any | null = null;
   profile!: User | null;
   currentUid!: string | null;
   myProfile!: User | null;
@@ -53,6 +63,14 @@ export class PostSensorDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     console.log('🚀 ~ PostSensorDialogComponent ~ data:', this.data);
+    this.post = data;
+  }
+  ngOnDestroy(): void {
+    this.$destroy.next(true);
+    this.$destroy.unsubscribe();
+  }
+  ngAfterViewInit(): void {
+    setTimeout(() => this.attachingInnerHtmlContent(), 100);
   }
 
   ngOnInit(): void {
@@ -64,6 +82,15 @@ export class PostSensorDialogComponent {
     });
   }
 
+  attachingInnerHtmlContent() {
+    if (this.contentToDisplay) {
+      this.contentToDisplay.nativeElement.innerHTML = this.post._content;
+    } else {
+      console.log('contentToDisplay is not ready yet');
+      setTimeout(() => this.attachingInnerHtmlContent(), 100);
+    }
+  }
+
   denyPost() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
@@ -71,19 +98,26 @@ export class PostSensorDialogComponent {
     });
     const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
       this.isLoading = true;
-      this.postService.sensorPost(this.data._id, 3).subscribe(
-        (res) => {
-          if (res.data) {
+      this.postService
+        .sensorPost(this.data._id, 3)
+        .pipe(takeUntil(this.$destroy))
+        .subscribe(
+          (res) => {
+            if (res.data) {
+              this.isLoading = false;
+              this.denySensorResult.emit(this.data._id);
+              this.dialog.closeAll();
+              this.notifierService.hideAll();
+              this.notifierService.notify(
+                'success',
+                'Từ chối duyệt thành công!'
+              );
+            }
+          },
+          (errMsg) => {
             this.isLoading = false;
-            this.denySensorResult.emit(this.data._id);
-            this.notifierService.hideAll();
-            this.notifierService.notify('success', 'Từ chối duyệt thành công!');
           }
-        },
-        (errMsg) => {
-          this.isLoading = false;
-        }
-      );
+        );
     });
     dialogRef.afterClosed().subscribe(() => {
       sub.unsubscribe();
@@ -126,22 +160,32 @@ export class PostSensorDialogComponent {
     });
     const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
       this.isLoading = true;
-      this.postService.removePost(this.data._id).subscribe(
-        (res) => {
-          if (res.data) {
+      this.postService
+        .removePost(this.data._id)
+        .pipe(takeUntil(this.$destroy))
+        .subscribe(
+          (res) => {
+            if (res.data) {
+              this.isLoading = false;
+              this.sensorResult.emit(this.data._id);
+              this.notifierService.hideAll();
+              this.notifierService.notify(
+                'success',
+                'Khóa bài viết thành công!'
+              );
+            }
+          },
+          (errMsg) => {
             this.isLoading = false;
-            this.sensorResult.emit(this.data._id);
-            this.notifierService.hideAll();
-            this.notifierService.notify('success', 'Khóa bài viết thành công!');
           }
-        },
-        (errMsg) => {
-          this.isLoading = false;
-        }
-      );
+        );
     });
     dialogRef.afterClosed().subscribe(() => {
       sub.unsubscribe();
     });
+  }
+
+  seeMoreContentClick() {
+    this.seeMore = !this.seeMore;
   }
 }
