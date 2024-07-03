@@ -9,6 +9,19 @@
       *ngIf="post"
       class="xs:flex xs:flex-col xs:col-span-12 lg:grid lg:col-span-9 bg-white-background py-4 px-8 mt-8 mb-8 rounded-lg"
     >
+      <!-- Reasons -->
+      <div
+        *ngIf="this.post._content && this.post._contentPost"
+        class="flex flex-row flex-wrap"
+      >
+        <p class="font-normal text-sm">Lý do bị báo cáo</p>
+        <div
+          class="flex flex-row h-6 bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 mb-2 rounded-full dark:bg-red-900 dark:text-red-300"
+          *ngFor="let reason of post._content"
+        >
+          <span class="tag">{{ reason }} </span>
+        </div>
+      </div>
       <div class="flex flex-col">
         <!-- General Information -->
         <div class="mb-8">
@@ -147,14 +160,14 @@
         ></div>
         <span
           *ngIf="!seeMore"
-          class="font-medium text-blue-500"
+          class="font-medium text-blue-500 cursor-pointer"
           (click)="seeMoreContentClick()"
         >
           Xem thêm
         </span>
         <span
           *ngIf="seeMore"
-          class="font-medium text-blue-500"
+          class="font-medium text-blue-500 cursor-pointer"
           (click)="seeMoreContentClick()"
         >
           Ẩn bớt
