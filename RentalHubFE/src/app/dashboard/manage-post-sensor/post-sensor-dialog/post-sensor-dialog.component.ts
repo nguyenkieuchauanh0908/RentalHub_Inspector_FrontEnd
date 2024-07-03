@@ -92,6 +92,7 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
   }
 
   denyPost() {
+    window.scrollTo(0, 0); // Scrolls the page to the top
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: 'Xác nhận từ chối duyệt?',
@@ -125,6 +126,7 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
   }
 
   sensor() {
+    window.scrollTo(0, 0); // Scrolls the page to the top
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: 'Xác nhận duyệt?',
@@ -154,6 +156,7 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
   }
 
   removePost() {
+    window.scrollTo(0, 0); // Scrolls the page to the top
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: 'Xác nhận khóa bài viết?',

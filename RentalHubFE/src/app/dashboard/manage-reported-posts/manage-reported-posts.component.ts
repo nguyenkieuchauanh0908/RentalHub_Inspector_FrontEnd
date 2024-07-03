@@ -95,6 +95,7 @@ export class ManageReportedPostsComponent implements OnInit, OnDestroy {
           post = res.data;
           //Nếu đã lấy được thông tin của post thì open sensor dialog
           if (post) {
+            window.scrollTo(0, 0); // Scrolls the page to the top
             const dialogRef = this.dialog.open(PostSensorDialogComponent, {
               width: '1000px',
               data: post,

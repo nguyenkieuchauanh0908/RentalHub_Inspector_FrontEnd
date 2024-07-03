@@ -80,6 +80,7 @@ export class DashboardComponent implements OnInit {
   }
 
   toMyAccount() {
+    window.scrollTo(0, 0); // Scrolls the page to the top
     const dialogRef = this.dialog.open(AccountEditDialogComponent, {
       width: '400px',
       data: this.myProfile,
@@ -87,6 +88,7 @@ export class DashboardComponent implements OnInit {
   }
 
   toMyLoginDetail() {
+    window.scrollTo(0, 0); // Scrolls the page to the top
     const dialogRef = this.dialog.open(LoginDetailUpdateDialogComponent, {
       width: '400px',
       data: this.myProfile?._email,
@@ -95,6 +97,7 @@ export class DashboardComponent implements OnInit {
 
   logout() {
     console.log('On logging out...');
+    window.scrollTo(0, 0); // Scrolls the page to the top
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: 'Bạn có chắc muốn đăng xuất?',
@@ -111,6 +114,7 @@ export class DashboardComponent implements OnInit {
   }
 
   updateAvatar() {
+    window.scrollTo(0, 0); // Scrolls the page to the top
     const dialogRef = this.dialog.open(UpdateAvatarDialogComponent, {
       width: '400px',
       data: this.myProfile?._avatar,

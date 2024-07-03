@@ -56,6 +56,7 @@ export class AddressSensorDialogComponent {
   }
 
   deny() {
+    window.scrollTo(0, 0); // Scrolls the page to the top
     const dialogRef = this.dialog.open(CommentReasonDialogComponent, {
       width: '400px',
       data: 'Lý do từ chối duyệt',
@@ -89,6 +90,7 @@ export class AddressSensorDialogComponent {
   }
 
   sensor() {
+    window.scrollTo(0, 0); // Scrolls the page to the top
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: 'Xác nhận duyệt?',
