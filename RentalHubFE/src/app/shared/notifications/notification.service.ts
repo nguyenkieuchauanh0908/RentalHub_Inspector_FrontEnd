@@ -212,6 +212,7 @@ export class NotificationService {
                 }
               }
             );
+            console.log('Test', thisNoti);
             this.setCurrentUnseenNotifications(updatedUnseenNotifications);
 
             //Thêm noti vào list seenNotifications
