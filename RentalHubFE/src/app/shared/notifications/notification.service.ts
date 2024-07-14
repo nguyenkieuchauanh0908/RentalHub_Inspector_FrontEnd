@@ -64,6 +64,7 @@ export class NotificationService {
   }
   private subscriptions: Subscription[] = [];
   constructor(private http: HttpClient, private socketService: SocketService) {
+    console.log('Constructing notification service!');
     this.onReceivingNewNotificationToUpdate();
   }
 
@@ -269,6 +270,7 @@ export class NotificationService {
     let unseenNotificaionList: Notification[] | null = null;
     let totalNotisUnseen: number = 0;
     let socketSub = this.socketService.getCurrentSocket.subscribe((socket) => {
+      console.log('Socketsub.....');
       if (socket) {
         socket.on('getNotification', (noti: SocketNotification) => {
           console.log('🚀 ~ NotificationService ~ socket.on ~ noti:', noti);
@@ -290,7 +292,7 @@ export class NotificationService {
 
           if (newNotiComing) {
             if (unseenNotificaionList) {
-              unseenNotificaionList.push(newNotiComing);
+              unseenNotificaionList.unshift(newNotiComing);
             } else {
               unseenNotificaionList = [newNotiComing];
             }
