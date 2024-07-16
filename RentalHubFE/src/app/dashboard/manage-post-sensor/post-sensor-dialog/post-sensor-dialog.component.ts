@@ -104,7 +104,7 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
     const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
       this.isLoading = true;
       this.postService
-        .sensorPost(this.data._postId, 3)
+        .sensorPost(this.data._id, 3)
         .pipe(takeUntil(this.$destroy))
         .subscribe(
           (res) => {
@@ -117,6 +117,7 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
                 'success',
                 'Từ chối duyệt thành công!'
               );
+              this.dialog.closeAll();
             }
           },
           (errMsg) => {
@@ -147,6 +148,7 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
               'success',
               'Duyệt bài viết thành công!'
             );
+            this.dialog.closeAll();
           }
         },
         (errMsg) => {
@@ -159,18 +161,16 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  removePost() {
-    window.scrollTo(0, 0); // Scrolls the page to the top
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '400px',
-      data: 'Xác nhận khóa bài viết?',
-    });
-    const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
-      this.isLoading = true;
-      this.postService
-        .removePost(this.data._id)
-        .pipe(takeUntil(this.$destroy))
-        .subscribe(
+  sensorReportPost(blocked: boolean) {
+    if (blocked) {
+      window.scrollTo(0, 0); // Scrolls the page to the top
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: 'Xác nhận khóa bài viết?',
+      });
+      const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
+        this.isLoading = true;
+        this.postService.sensorReportPost(this.data._id, true).subscribe(
           (res) => {
             if (res.data) {
               this.isLoading = false;
@@ -180,16 +180,47 @@ export class PostSensorDialogComponent implements OnInit, OnDestroy {
                 'success',
                 'Khóa bài viết thành công!'
               );
+              this.dialog.closeAll();
             }
           },
           (errMsg) => {
             this.isLoading = false;
           }
         );
-    });
-    dialogRef.afterClosed().subscribe(() => {
-      sub.unsubscribe();
-    });
+      });
+      dialogRef.afterClosed().subscribe(() => {
+        sub.unsubscribe();
+      });
+    } else {
+      window.scrollTo(0, 0); // Scrolls the page to the top
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: 'Xác nhận duyệt bài viết?',
+      });
+      const sub = dialogRef.componentInstance.confirmYes.subscribe(() => {
+        this.isLoading = true;
+        this.postService.sensorReportPost(this.data._id, false).subscribe(
+          (res) => {
+            if (res.data) {
+              this.isLoading = false;
+              this.sensorResult.emit(this.data._id);
+              this.notifierService.hideAll();
+              this.notifierService.notify(
+                'success',
+                'Duyệt bài viết thành công!'
+              );
+              this.dialog.closeAll();
+            }
+          },
+          (errMsg) => {
+            this.isLoading = false;
+          }
+        );
+      });
+      dialogRef.afterClosed().subscribe(() => {
+        sub.unsubscribe();
+      });
+    }
   }
 
   seeMoreContentClick() {

@@ -241,6 +241,23 @@ export class PostService {
       .pipe(catchError(handleError));
   }
 
+  sensorReportPost(reportId: string, blocked: boolean) {
+    if (blocked) {
+      return this.http
+        .patch<resDataDTO>(
+          environment.baseUrl + 'posts/sensor-post-reported/' + reportId,
+          { _status: 4 }
+        )
+        .pipe(catchError(handleError));
+    }
+    return this.http
+      .patch<resDataDTO>(
+        environment.baseUrl + 'posts/sensor-post-reported/' + reportId,
+        {}
+      )
+      .pipe(catchError(handleError));
+  }
+
   removePost(reportId: string) {
     return this.http
       .patch<resDataDTO>(
